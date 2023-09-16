@@ -1,0 +1,31 @@
+name: mangkat_admin
+description: A new Flutter project.
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: '>=3.1.2 <4.0.0'
+
+dependencies:
+  equatable: ^2.0.5
+  flutter:
+    sdk: flutter
+  flutter_riverpod: ^2.4.0
+  google_fonts: ^6.0.0
+  google_maps_flutter: ^2.5.0
+  intl: ^0.18.1
+  pointer_interceptor: ^0.9.3+6
+
+  # flutter_polyline_points: ^2.0.0 error on web https://github.com/Dammyololade/flutter_polyline_points/issues/78
+  flutter_polyline_no_xmlhttperror:
+        git:
+            url: https://github.com/wendellavila/flutter_polyline_no_xmlhttperror
+            ref: main
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
