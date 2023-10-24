@@ -18,7 +18,7 @@ class RouteManagerWindow extends ConsumerWidget {
     return TableWrapper(
       title: 'Trayek',
       contentPadding: EdgeInsets.only(
-        right: rightBar[AddRouteWindow.name]!.$1 ? sidebarWidth : 0,
+        right: rightBar[AddRouteWindow.name]!.$1 ? sidebarWidth - 24 : 0,
       ),
       onAdd: () {
         ref

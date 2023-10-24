@@ -83,19 +83,35 @@ class _AddRouteWindowState extends ConsumerState<AddRouteWindow> {
     final LatLng checkpoint = _checkpoints[index];
 
     // special case for the closing checkpoint cause it's the same as the first, we dont want to remove both
-    if (_checkpoints.length > 1 &&
-        index == _checkpoints.length - 1 &&
-        checkpoint == _checkpoints.first) {
-      _checkpoints.removeAt(index);
-      _routes.removeWhere(
-        (key, value) => key.$2 == checkpoint,
-      );
+    if (checkpoint == _checkpoints.first && isRouteClosed) {
+      if (index == _checkpoints.length - 1) {
+        _checkpoints.removeAt(index);
+        _routes.removeWhere(
+          (key, value) => key.$2 == checkpoint,
+        );
 
-      setState(() {});
-      _redrawRoutes();
+        setState(() {});
+        _redrawRoutes();
 
-      // no need to remove marker, because its still being used as the first checkpoint
-      return;
+        // no need to remove marker, because its still being used as the first checkpoint
+        return;
+      } else {
+        _checkpoints.removeAt(index);
+        _checkpoints.removeAt(_checkpoints.length - 1);
+        _routes.removeWhere(
+          (key, value) => key.$1 == checkpoint || key.$2 == checkpoint,
+        );
+
+        setState(() {});
+        _redrawRoutes();
+
+        mapController.removeMarker(MarkerId(
+          'new_route/checkpoint_${checkpoint.latitude}_${checkpoint.longitude}',
+        ));
+
+        // no need to remove marker, because its still being used as the first checkpoint
+        return;
+      }
     }
 
     mapController.removeMarker(MarkerId(
