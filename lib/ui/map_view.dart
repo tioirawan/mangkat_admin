@@ -18,7 +18,7 @@ class MapView extends ConsumerStatefulWidget {
 class MapViewState extends ConsumerState<MapView> {
   static const CameraPosition _initialCamera = CameraPosition(
     target: LatLng(-7.9726366, 112.6381682),
-    zoom: 13,
+    zoom: 12,
   );
 
   @override

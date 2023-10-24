@@ -25,7 +25,7 @@ final rightSidebarContentController =
     ..register(
       AddRouteWindow.name,
       const AddRouteWindow(),
-      true,
+      false,
     ),
 );
 
@@ -58,8 +58,6 @@ class ContentWindowNotifier extends StateNotifier<Map<String, (bool, Widget)>> {
         id: (true, window),
       };
     }
-
-    print(state);
   }
 
   void close(String id) {
