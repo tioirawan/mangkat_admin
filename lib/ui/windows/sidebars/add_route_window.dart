@@ -309,7 +309,7 @@ class _AddRouteWindowState extends ConsumerState<AddRouteWindow> {
                 Row(
                   children: [
                     const Text(
-                      'Checkpoints',
+                      'Rute',
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 18,
