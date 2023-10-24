@@ -86,6 +86,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_animate:
+    dependency: "direct main"
+    description:
+      name: flutter_animate
+      sha256: "62f346340a96192070e31e3f2a1bd30a28530f1fe8be978821e06cd56b74d6d2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.0+1"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -369,6 +377,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  scrollable_table_view:
+    dependency: "direct main"
+    description:
+      name: scrollable_table_view
+      sha256: ef1dcd717fed14f22a7f1b92d01614330ad606d23aad3f5e8bf6ed64a0c0cf7c
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.2"
   sky_engine:
     dependency: transitive
     description: flutter

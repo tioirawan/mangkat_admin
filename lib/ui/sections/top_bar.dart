@@ -29,7 +29,7 @@ class _TopBarState extends ConsumerState<TopBar>
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-      decoration: AppTheme.windowCardDecoration(),
+      decoration: AppTheme.windowCardDecoration,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 
-import 'statistic_window.dart';
+import '../windows/statistic_window.dart';
 
 class LeftBar extends ConsumerWidget {
   const LeftBar({super.key});

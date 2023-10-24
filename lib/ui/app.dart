@@ -4,11 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 
 import 'map_view.dart';
+import 'sections/bottom_dock.dart';
+import 'sections/content.dart';
+import 'sections/left_bar.dart';
+import 'sections/right_bar.dart';
+import 'sections/top_bar.dart';
 import 'themes/app_theme.dart';
-import 'windows/bottom_dock.dart';
-import 'windows/left_bar.dart';
-import 'windows/right_bar.dart';
-import 'windows/top_bar.dart';
 
 // for handling with event always captured by the map,
 // we need to use PointerInterceptor
@@ -27,13 +28,7 @@ class App extends StatelessWidget {
         body: Stack(
           children: [
             const Positioned.fill(child: MapView()),
-            Positioned(
-              bottom: 24,
-              left: 24,
-              right: 24,
-              child:
-                  Center(child: PointerInterceptor(child: const BottomDock())),
-            ),
+
             Positioned.fill(
               child: Row(
                 children: [
@@ -56,6 +51,24 @@ class App extends StatelessWidget {
               left: 24,
               right: 24,
               child: Center(child: PointerInterceptor(child: const TopBar())),
+            ),
+            // content in the middle
+            const Positioned(
+              left: 24,
+              right: 24,
+              top: 24,
+              bottom: 24 + BottomDock.height,
+              child: Content(),
+            ),
+            Positioned(
+              bottom: 24,
+              left: 24,
+              right: 24,
+              child: Center(
+                child: PointerInterceptor(
+                  child: const BottomDock(),
+                ),
+              ),
             ),
           ],
         ),

@@ -19,7 +19,7 @@ class _StatisticWindowState extends ConsumerState<StatisticWindow> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: AppTheme.windowCardDecoration(),
+      decoration: AppTheme.windowCardDecoration,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

@@ -21,6 +21,8 @@ dependencies:
         git:
             url: https://github.com/wendellavila/flutter_polyline_no_xmlhttperror
             ref: main
+  flutter_animate: ^4.2.0+1
+  scrollable_table_view: ^2.0.2
 
 dev_dependencies:
   flutter_test:
