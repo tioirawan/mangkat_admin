@@ -65,7 +65,7 @@ class TableWrapper extends ConsumerWidget {
                             child: Icon(
                               Icons.add,
                               color: Theme.of(context).colorScheme.onPrimary,
-                              size: 24,
+                              size: 18,
                             ),
                           ),
                         ),
@@ -83,7 +83,7 @@ class TableWrapper extends ConsumerWidget {
                             child: Icon(
                               Icons.close,
                               color: Theme.of(context).colorScheme.onPrimary,
-                              size: 24,
+                              size: 18,
                             ),
                           ),
                         ),

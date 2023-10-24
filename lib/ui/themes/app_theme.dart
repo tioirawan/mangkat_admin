@@ -27,6 +27,12 @@ abstract class AppTheme {
         ),
         enabledBorder: inputBorder,
         disabledBorder: inputBorder,
+        border: inputBorder,
+        focusedBorder: inputBorder.copyWith(
+          borderSide: BorderSide(
+            color: baseTheme.colorScheme.primary,
+          ),
+        ),
       ),
     );
   }

@@ -17,4 +17,12 @@ class ContentWindowNotifier extends StateNotifier<ContentWindowType?> {
       state = window;
     }
   }
+
+  void show(ContentWindowType window) {
+    state = window;
+  }
+
+  void close() {
+    state = null;
+  }
 }

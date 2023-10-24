@@ -6,9 +6,13 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../../../domain/models/route_model.dart';
+import '../../../domain/repositories/route_repository.dart';
 import '../../../domain/services/route_service.dart';
 import '../../helpers/map_helper.dart';
+import '../../providers/common/content_window_controller/content_window_controller.dart';
 import '../../providers/common/map_controller/map_provider.dart';
+import '../../providers/common/sections/sidebar_content_controller.dart';
 import '../../themes/app_theme.dart';
 
 class AddRouteWindow extends ConsumerStatefulWidget {
@@ -26,8 +30,8 @@ class _AddRouteWindowState extends ConsumerState<AddRouteWindow> {
   final TextEditingController _routeNameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
 
-  TimeOfDay _startTime = TimeOfDay.now();
-  TimeOfDay _endTime = TimeOfDay.now();
+  TimeOfDay _startTime = const TimeOfDay(hour: 7, minute: 0);
+  TimeOfDay _endTime = const TimeOfDay(hour: 17, minute: 0);
   Color _color = Colors.blue;
   String _type = 'FIXED'; // valid value: FIXED, TEMPORARY
 
@@ -211,6 +215,22 @@ class _AddRouteWindowState extends ConsumerState<AddRouteWindow> {
     mapController.addPolyline(polyline);
   }
 
+  void _clearPolylines() {
+    const polylineId = PolylineId(
+      'new_route/paths',
+    );
+
+    mapController.removePolyline(polylineId);
+  }
+
+  void _clearMarkers() {
+    for (final checkpoint in _checkpoints) {
+      mapController.removeMarker(MarkerId(
+        'new_route/checkpoint_${checkpoint.latitude}_${checkpoint.longitude}',
+      ));
+    }
+  }
+
   Future<void> _closeRoute() async {
     if (isRouteClosed) {
       return;
@@ -243,6 +263,29 @@ class _AddRouteWindowState extends ConsumerState<AddRouteWindow> {
     );
   }
 
+  Future<void> _saveRoute() async {
+    final route = RouteModel(
+      name: _routeNameController.text,
+      startOperation: _startTime.format(context),
+      endOperation: _endTime.format(context),
+      color: _color,
+      type: _type,
+      description: _descriptionController.text,
+      checkpoints: _checkpoints,
+      routes: _computeRoutes().toList(),
+    );
+
+    await ref.read(routeRepositoryProvider).addRoute(route);
+
+    _zoomToCheckpoints();
+    _clearMarkers();
+    _clearPolylines();
+    ref.read(rightSidebarContentController.notifier).close(AddRouteWindow.name);
+    ref
+        .read(contentWindowProvider.notifier)
+        .show(ContentWindowType.routeManager);
+  }
+
   @override
   void dispose() {
     _routeNameController.dispose();
@@ -260,16 +303,39 @@ class _AddRouteWindowState extends ConsumerState<AddRouteWindow> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.all(24),
-            child: Text(
-              'Tambah Trayek',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 24,
-                fontWeight: FontWeight.w700,
-                height: 0,
-              ),
+          Padding(
+            padding: const EdgeInsets.all(24),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Tambah Trayek',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 24,
+                    fontWeight: FontWeight.w700,
+                    height: 0,
+                  ),
+                ),
+                Material(
+                  shape: const CircleBorder(),
+                  color: Theme.of(context).colorScheme.error,
+                  child: InkWell(
+                    onTap: () => ref
+                        .read(rightSidebarContentController.notifier)
+                        .close(AddRouteWindow.name),
+                    customBorder: const CircleBorder(),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Icon(
+                        Icons.close_rounded,
+                        color: Theme.of(context).colorScheme.onError,
+                        size: 18,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           // if (!_isEditingRoute)
@@ -445,6 +511,8 @@ class _AddRouteWindowState extends ConsumerState<AddRouteWindow> {
                               _toggleIsEditingRoute();
                               return;
                             }
+
+                            _saveRoute();
                           }
                         : null,
                     child: _isEditingRoute
