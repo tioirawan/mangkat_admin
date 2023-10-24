@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -21,20 +22,26 @@ class MapViewState extends ConsumerState<MapView> {
   Widget build(BuildContext context) {
     final state = ref.watch(mapControllerProvider);
 
-    return GoogleMap(
-      trafficEnabled: false,
-      cloudMapId: 'c92510ddc71ac5fc',
-      initialCameraPosition: _initialCamera,
-      markers: state.markers,
-      polylines: state.polylines,
-      onTap: (LatLng latLng) {
-        ref.read(mapControllerProvider.notifier).onTap(latLng);
-      },
-      onMapCreated: (GoogleMapController controller) {
-        ref
-            .read(mapControllerProvider.notifier)
-            .setGoogleMapController(controller);
-      },
+    return AnimatedContainer(
+      duration: 200.milliseconds,
+      curve: Curves.easeInOut,
+      color: Theme.of(context).colorScheme.primary,
+      padding: state.isFocused ? const EdgeInsets.all(16) : EdgeInsets.zero,
+      child: GoogleMap(
+        trafficEnabled: false,
+        cloudMapId: 'c92510ddc71ac5fc',
+        initialCameraPosition: _initialCamera,
+        markers: state.markers,
+        polylines: state.polylines,
+        onTap: (LatLng latLng) {
+          ref.read(mapControllerProvider.notifier).onTap(latLng);
+        },
+        onMapCreated: (GoogleMapController controller) {
+          ref
+              .read(mapControllerProvider.notifier)
+              .setGoogleMapController(controller);
+        },
+      ),
     );
   }
 }

@@ -23,6 +23,7 @@ dependencies:
             ref: main
   flutter_animate: ^4.2.0+1
   scrollable_table_view: ^2.0.2
+  flex_color_picker: ^3.3.0
 
 dev_dependencies:
   flutter_test:

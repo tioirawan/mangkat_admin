@@ -8,10 +8,26 @@ abstract class AppTheme {
       colorScheme: const ColorScheme.light(
         primary: Color(0xFF1779D3),
       ),
+      // textfield
+    );
+
+    final inputBorder = OutlineInputBorder(
+      borderSide: BorderSide(
+        color: baseTheme.colorScheme.onBackground.withOpacity(0.1),
+      ),
     );
 
     return baseTheme.copyWith(
       textTheme: GoogleFonts.poppinsTextTheme(baseTheme.textTheme),
+      inputDecorationTheme: InputDecorationTheme(
+        labelStyle: const TextStyle(
+          color: Colors.black,
+          fontSize: 14,
+          fontWeight: FontWeight.w700,
+        ),
+        enabledBorder: inputBorder,
+        disabledBorder: inputBorder,
+      ),
     );
   }
 

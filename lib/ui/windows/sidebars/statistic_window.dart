@@ -3,10 +3,12 @@ import 'package:flutter_polyline_no_xmlhttperror/flutter_polyline_no_xmlhttperro
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import '../providers/common/map_controller/map_provider.dart';
-import '../themes/app_theme.dart';
+import '../../providers/common/map_controller/map_provider.dart';
+import '../../themes/app_theme.dart';
 
 class StatisticWindow extends ConsumerStatefulWidget {
+  static const String name = 'window/statistic';
+
   const StatisticWindow({
     super.key,
   });
@@ -129,7 +131,7 @@ class _StatisticWindowState extends ConsumerState<StatisticWindow> {
   void _generatePolyline() async {
     final controller = ref.read(mapControllerProvider.notifier);
 
-    const googleAPiKey = "AIzaSyDbjkQSHEPm37DbLuICyGxXF0FjzkPxhXA";
+    const googleAPiKey = 'AIzaSyDbjkQSHEPm37DbLuICyGxXF0FjzkPxhXA';
     PolylinePoints polylinePoints = PolylinePoints(googleAPiKey);
 
     for (final MapEntry<Color, List<LatLng>> entry in routes.entries) {
@@ -150,7 +152,7 @@ class _StatisticWindowState extends ConsumerState<StatisticWindow> {
 
         controller.addMarker(
           Marker(
-            markerId: MarkerId("${routeName}_$i"),
+            markerId: MarkerId('${routeName}_$i'),
             position: checkpoints[i],
             infoWindow: InfoWindow(
               title: 'Checkpoint $i',
@@ -159,7 +161,7 @@ class _StatisticWindowState extends ConsumerState<StatisticWindow> {
           ),
         );
 
-        print("$routeName Length: ${checkpoints.length},  ${results.length}");
+        print('$routeName Length: ${checkpoints.length},  ${results.length}');
 
         controller.addPolyline(Polyline(
           polylineId: PolylineId('trayek_$routeName'),
@@ -180,7 +182,7 @@ class _StatisticWindowState extends ConsumerState<StatisticWindow> {
       final routeName = color.toString();
 
       for (int i = 0; i < checkpoints.length - 1; i++) {
-        controller.removeMarker(MarkerId("${routeName}_$i"));
+        controller.removeMarker(MarkerId('${routeName}_$i'));
       }
 
       controller.removePolyline(PolylineId('trayek_$routeName'));

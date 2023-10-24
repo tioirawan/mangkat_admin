@@ -1,17 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../helpers/sizing_helper.dart';
 import '../providers/common/content_window_controller/content_window_controller.dart';
+import '../providers/common/sections/sidebar_content_controller.dart';
 import 'common/table_wrapper.dart';
+import 'sidebars/add_route_window.dart';
 
 class RouteManagerWindow extends ConsumerWidget {
   const RouteManagerWindow({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final rightBar = ref.watch(rightSidebarContentController);
+    final double sidebarWidth = SizingHelper.calculateSidebarWidth(context);
+
     return TableWrapper(
       title: 'Trayek',
-      onAdd: () {},
+      contentPadding: EdgeInsets.only(
+        right: rightBar[AddRouteWindow.name]!.$1 ? sidebarWidth : 0,
+      ),
+      onAdd: () {
+        ref
+            .read(rightSidebarContentController.notifier)
+            .toggle(AddRouteWindow.name);
+      },
       onClose: () => ref
           .read(contentWindowProvider.notifier)
           .toggle(ContentWindowType.routeManager),

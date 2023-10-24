@@ -17,7 +17,8 @@ class MapControllerNotifier extends StateNotifier<MapState> {
   GoogleMapController? get controller => _googleMapController;
 
   // tap stream
-  final StreamController<LatLng> _tapController = StreamController<LatLng>();
+  final StreamController<LatLng> _tapController =
+      StreamController<LatLng>.broadcast();
   Stream<LatLng> get tapStream => _tapController.stream;
 
   void onTap(LatLng latLng) {
@@ -26,6 +27,14 @@ class MapControllerNotifier extends StateNotifier<MapState> {
 
   void setGoogleMapController(GoogleMapController controller) {
     _googleMapController = controller;
+  }
+
+  void requestFocus() {
+    state = state.copyWith(isFocus: true);
+  }
+
+  void removeFocus() {
+    state = state.copyWith(isFocus: false);
   }
 
   void addMarker(Marker marker) {
@@ -54,6 +63,8 @@ class MapControllerNotifier extends StateNotifier<MapState> {
         return marker.markerId != markerId;
       }).toSet(),
     );
+
+    print(state.markers);
   }
 
   @override

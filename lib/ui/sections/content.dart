@@ -23,11 +23,13 @@ class Content extends ConsumerWidget {
       switchOutCurve: Curves.easeIn,
       transitionBuilder: (child, animation) => FadeTransition(
         opacity: animation,
-        child: SlideTransition(
-          position: Tween<Offset>(
-            begin: const Offset(0, 0.1),
-            end: Offset.zero,
-          ).animate(animation),
+        child: SizeTransition(
+          sizeFactor: animation,
+          axisAlignment: -1,
+          // position: Tween<Offset>(
+          //   begin: const Offset(0, 0.1),
+          //   end: Offset.zero,
+          // ).animate(animation),
           child: child,
         ),
       ),
@@ -54,10 +56,11 @@ class Content extends ConsumerWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        Container(
-          decoration: AppTheme.windowCardDecoration,
-          child: content,
-        ),
+        // Container(
+        //   decoration: AppTheme.windowCardDecoration,
+        //   child: content,
+        // ),
+        content,
         // arrow pointing down using container
         Transform.translate(
           offset: Offset(xOffset, 0),
