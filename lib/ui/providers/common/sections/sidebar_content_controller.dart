@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../domain/models/driver_model.dart';
 import '../../../../domain/models/fleet_model.dart';
+import '../../../windows/sidebars/add_driver_window.dart';
 import '../../../windows/sidebars/add_fleet_window.dart';
 import '../../../windows/sidebars/add_route_window.dart';
 import '../../../windows/sidebars/statistic_window.dart';
@@ -33,6 +35,13 @@ final rightSidebarContentController =
       AddFleetWindow.name,
       (Object? arg) => AddFleetWindow(
         fleet: arg as FleetModel?,
+      ),
+      false,
+    )
+    ..register(
+      AddDriverWindow.name,
+      (Object? arg) => AddDriverWindow(
+        driver: arg as DriverModel?,
       ),
       false,
     ),
