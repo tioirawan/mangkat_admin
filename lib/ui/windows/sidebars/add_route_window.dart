@@ -343,7 +343,6 @@ class _AddRouteWindowState extends ConsumerState<AddRouteWindow> {
       if (_isEditingRoute) {
         mapController.requestFocus();
       } else {
-        _zoomToCheckpoints();
         mapController.removeFocus();
       }
     });
@@ -580,10 +579,10 @@ class _AddRouteWindowState extends ConsumerState<AddRouteWindow> {
                     onPressed: _checkpoints.length > 1
                         ? () {
                             if (_isEditingRoute) {
+                              _zoomToCheckpoints();
                               _toggleIsEditingRoute();
                               return;
                             }
-
                             _saveRoute();
                           }
                         : null,

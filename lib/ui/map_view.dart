@@ -7,7 +7,7 @@ import '../domain/models/route_model.dart';
 import 'providers/common/content_window_controller/content_window_controller.dart';
 import 'providers/common/map_controller/map_provider.dart';
 import 'providers/route/route_on_edit_provider.dart';
-import 'providers/route/routes_provider.dart';
+import 'providers/route/routes_filtered_provider.dart';
 
 class MapView extends ConsumerStatefulWidget {
   const MapView({super.key});
@@ -25,13 +25,13 @@ class MapViewState extends ConsumerState<MapView> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(mapControllerProvider);
-    final routes = ref.watch(routesProvider);
+    final routes = ref.watch(routeFilteredProvider);
     final editedRoute = ref.watch(routeOnEditProvider);
 
     Set<Polyline> polylines = state.polylines;
 
     if (!state.isFocused) {
-      for (final RouteModel route in routes.asData?.value ?? []) {
+      for (final RouteModel route in routes) {
         if (route.id == null ||
             route.routes == null ||
             route.color == null ||

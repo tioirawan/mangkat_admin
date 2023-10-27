@@ -128,7 +128,7 @@ class _AddDriverWindowState extends ConsumerState<AddDriverWindow> {
           Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              'Foto Armada',
+              'Foto Pengemudi',
               style: Theme.of(context).textTheme.bodySmall!.copyWith(
                     color: Theme.of(context).colorScheme.onBackground,
                     fontSize: 11,
