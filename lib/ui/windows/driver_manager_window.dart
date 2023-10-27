@@ -66,6 +66,26 @@ class _DriverManagerWindowState extends ConsumerState<DriverManagerWindow> {
       '',
     ];
 
+    if (drivers.isEmpty) {
+      return Center(
+        child: Column(
+          children: [
+            // illustration
+            const SizedBox(height: 18),
+            const Icon(
+              Icons.person_off_rounded,
+              size: 64,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Belum ada pengemudi, silahkan tambahkan pengemudi terlebih dahulu',
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+          ],
+        ),
+      );
+    }
+
     return Table(
       children: [
         TableRow(

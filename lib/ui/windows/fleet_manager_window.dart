@@ -62,6 +62,25 @@ class _FleetManagerWindowState extends ConsumerState<FleetManagerWindow> {
       '',
     ];
 
+    if (fleets.isEmpty) {
+      return Center(
+        child: Column(
+          children: [
+            const SizedBox(height: 18),
+            const Icon(
+              Icons.directions_bus_rounded,
+              size: 64,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Belum ada armada, silahkan tambahkan armada terlebih dahulu',
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+          ],
+        ),
+      );
+    }
+
     return Table(
       children: [
         TableRow(

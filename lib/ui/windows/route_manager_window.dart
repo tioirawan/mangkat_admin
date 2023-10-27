@@ -9,11 +9,18 @@ import '../providers/route/routes_provider.dart';
 import 'common/table_wrapper.dart';
 import 'sidebars/add_route_window.dart';
 
-class RouteManagerWindow extends ConsumerWidget {
+class RouteManagerWindow extends ConsumerStatefulWidget {
   const RouteManagerWindow({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<RouteManagerWindow> createState() => _RouteManagerWindowState();
+}
+
+class _RouteManagerWindowState extends ConsumerState<RouteManagerWindow> {
+  @override
+  Widget build(BuildContext context) {
+    final state = ref.watch(routesProvider);
+
     return TableWrapper(
       title: 'Trayek',
       onAdd: () => ref
@@ -24,14 +31,16 @@ class RouteManagerWindow extends ConsumerWidget {
           .toggle(ContentWindowType.routeManager),
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
-        child: _buildTable(context, ref),
+        child: state.when(
+          data: (routes) => _buildTable(context, routes),
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (e, s) => Center(child: Text(e.toString())),
+        ),
       ),
     );
   }
 
-  Widget _buildTable(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(routesProvider);
-
+  Widget _buildTable(BuildContext context, List<RouteModel> routes) {
     final colorScheme = Theme.of(context).colorScheme;
     final headerStyle = TextStyle(
       color: colorScheme.onBackground,
@@ -52,55 +61,69 @@ class RouteManagerWindow extends ConsumerWidget {
       '',
     ];
 
-    return state.when(
-      data: (routes) => Table(
-        children: [
-          TableRow(
-            children: headers
-                .map(
-                  (header) => SizedBox(
-                    height: 38,
-                    child: Text(header, style: headerStyle),
-                  ),
-                )
-                .toList(),
-          ),
-          for (final route in routes)
-            TableRow(
-              children: [
-                Text(route.name ?? '-'),
-                Text(route.startOperation ?? '-'),
-                Text(route.endOperation ?? '-'),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                    width: 24,
-                    height: 24,
-                    decoration: BoxDecoration(
-                      color: route.color ?? Colors.black,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  ),
-                ),
-                Text(route.type ?? '-'),
-                Text(
-                  route.description ?? '-',
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const Text('0'),
-                _buildActions(context, ref, route),
-              ],
+    if (routes.isEmpty) {
+      return Center(
+        child: Column(
+          children: [
+            const SizedBox(height: 18),
+            const Icon(
+              Icons.route_rounded,
+              size: 64,
             ),
-        ],
-      ),
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, s) => Center(child: Text(e.toString())),
+            const SizedBox(height: 16),
+            Text(
+              'Belum ada trayek, silahkan tambahkan trayek terlebih dahulu',
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Table(
+      children: [
+        TableRow(
+          children: headers
+              .map(
+                (header) => SizedBox(
+                  height: 38,
+                  child: Text(header, style: headerStyle),
+                ),
+              )
+              .toList(),
+        ),
+        for (final route in routes)
+          TableRow(
+            children: [
+              Text(route.name ?? '-'),
+              Text(route.startOperation ?? '-'),
+              Text(route.endOperation ?? '-'),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Container(
+                  width: 24,
+                  height: 24,
+                  decoration: BoxDecoration(
+                    color: route.color ?? Colors.black,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                ),
+              ),
+              Text(route.type ?? '-'),
+              Text(
+                route.description ?? '-',
+                overflow: TextOverflow.ellipsis,
+              ),
+              const Text('0'),
+              _buildActions(context, route),
+            ],
+          ),
+      ],
     );
   }
 
   Widget _buildActions(
     BuildContext context,
-    WidgetRef ref,
     RouteModel route,
   ) {
     final colorScheme = Theme.of(context).colorScheme;
