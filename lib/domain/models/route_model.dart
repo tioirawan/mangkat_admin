@@ -1,4 +1,6 @@
 // ignore_for_file: invalid_annotation_target
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -42,6 +44,34 @@ class RouteModel with _$RouteModel {
   Map<String, dynamic> toDocument() => toJson()
     ..remove('id')
     ..remove('reference');
+
+  double get distance {
+    if (routes == null) {
+      return 0;
+    }
+
+    double distance = 0;
+
+    for (int i = 0; i < routes!.length - 1; i++) {
+      distance += _calculateDistance(
+        routes![i].latitude,
+        routes![i].longitude,
+        routes![i + 1].latitude,
+        routes![i + 1].longitude,
+      );
+    }
+
+    return distance;
+  }
+
+  double _calculateDistance(lat1, lon1, lat2, lon2) {
+    var p = 0.017453292519943295;
+    var c = cos;
+    var a = 0.5 -
+        c((lat2 - lat1) * p) / 2 +
+        c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p)) / 2;
+    return 12742 * asin(sqrt(a));
+  }
 }
 
 List<Map<String, dynamic>> _encodeLatLngList(List<LatLng>? points) => points!

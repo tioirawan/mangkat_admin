@@ -8,6 +8,7 @@ import '../providers/common/content_window_controller/content_window_controller.
 import '../providers/common/sections/sidebar_content_controller.dart';
 import '../providers/fleet/fleets_provider.dart';
 import '../providers/route/route_provider.dart';
+import '../widgets/route_pill.dart';
 import 'common/table_wrapper.dart';
 import 'sidebars/add_fleet_window.dart';
 
@@ -175,19 +176,9 @@ class _FleetManagerWindowState extends ConsumerState<FleetManagerWindow> {
       return const Text('-');
     }
 
-    return Row(
-      children: [
-        Container(
-          width: 24,
-          height: 24,
-          decoration: BoxDecoration(
-            color: route.color ?? Colors.black,
-            borderRadius: BorderRadius.circular(4),
-          ),
-        ),
-        const SizedBox(width: 8),
-        Text(route.name ?? ''),
-      ],
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: RoutePill(route: route),
     );
   }
 

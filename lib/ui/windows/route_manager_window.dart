@@ -8,6 +8,7 @@ import '../providers/common/content_window_controller/content_window_controller.
 import '../providers/common/sections/sidebar_content_controller.dart';
 import '../providers/route/route_fleets_provider.dart';
 import '../providers/route/routes_provider.dart';
+import '../widgets/route_pill.dart';
 import 'common/table_wrapper.dart';
 import 'sidebars/add_route_window.dart';
 
@@ -54,9 +55,9 @@ class _RouteManagerWindowState extends ConsumerState<RouteManagerWindow> {
 
     final headers = [
       'Nama Trayek',
+      'Panjang Trayek',
       'Mulai Operasi',
       'Selesai Operasi',
-      'Warna',
       'Jenis',
       'Deskripsi',
       'Armada Beroperasi',
@@ -97,20 +98,10 @@ class _RouteManagerWindowState extends ConsumerState<RouteManagerWindow> {
         for (final route in routes)
           TableRow(
             children: [
-              Text(route.name ?? '-'),
+              _buildRouteName(route),
+              Text('${route.distance.toStringAsFixed(2)} km'),
               Text(route.startOperation ?? '-'),
               Text(route.endOperation ?? '-'),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                  width: 24,
-                  height: 24,
-                  decoration: BoxDecoration(
-                    color: route.color ?? Colors.black,
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                ),
-              ),
               Text(route.type ?? '-'),
               Text(
                 route.description ?? '-',
@@ -121,6 +112,13 @@ class _RouteManagerWindowState extends ConsumerState<RouteManagerWindow> {
             ],
           ),
       ],
+    );
+  }
+
+  Widget _buildRouteName(RouteModel route) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: RoutePill(route: route),
     );
   }
 
