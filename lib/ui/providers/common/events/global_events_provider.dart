@@ -7,6 +7,9 @@ final globalEventsProvider =
   (_) => GlobalEventsNotifier(),
 );
 
+/// Notifies about global events
+/// For example, when a window is going to be closed, and we need to do some actions
+/// before it happens, like clearing map markers
 class GlobalEventsNotifier extends StateNotifier<GlobalEvent?> {
   GlobalEventsNotifier() : super(null);
 
