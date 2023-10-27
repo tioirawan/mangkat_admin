@@ -76,7 +76,7 @@ class BottomDock extends ConsumerWidget {
                   duration: 200.milliseconds,
                   decoration: ShapeDecoration(
                     color: isActive
-                        ? Theme.of(context).primaryColor
+                        ? Theme.of(context).colorScheme.primary
                         : const Color(0xFF505050),
                     shape: const OvalBorder(),
                   ),
@@ -87,7 +87,7 @@ class BottomDock extends ConsumerWidget {
                   label,
                   style: TextStyle(
                     color: isActive
-                        ? Theme.of(context).primaryColor
+                        ? Theme.of(context).colorScheme.primary
                         : const Color(0xFF505050),
                     fontSize: 10,
                     fontWeight: FontWeight.w400,
