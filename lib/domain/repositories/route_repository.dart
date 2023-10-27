@@ -8,8 +8,8 @@ abstract class RouteRepository {
   Stream<List<RouteModel>> routesStream();
   Future<List<RouteModel>> getRoutes();
   Future<RouteModel> getRoute(String id);
-  Future<void> addRoute(RouteModel route);
-  Future<void> updateRoute(RouteModel route);
+  Future<RouteModel> addRoute(RouteModel route);
+  Future<RouteModel> updateRoute(RouteModel route);
   Future<void> deleteRoute(RouteModel route);
 }
 
