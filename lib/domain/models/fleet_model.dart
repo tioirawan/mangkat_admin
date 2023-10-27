@@ -7,6 +7,8 @@ part 'fleet_model.freezed.dart';
 part 'fleet_model.g.dart';
 
 enum FleetStatus {
+  @JsonValue('idle')
+  idle,
   @JsonValue('operating')
   operating,
   @JsonValue('rented')
@@ -33,6 +35,8 @@ enum FleetType {
 extension FleetStatusX on FleetStatus {
   String get name {
     switch (this) {
+      case FleetStatus.idle:
+        return 'Idle';
       case FleetStatus.operating:
         return 'Operating';
       case FleetStatus.rented:
@@ -69,11 +73,15 @@ class FleetModel with _$FleetModel {
   factory FleetModel({
     String? id,
     String? vehicleNumber,
+    String? image,
     FleetStatus? status,
     FleetType? type,
     String? notes,
     String? driverRef,
     String? routeRef,
+    // timestamp
+    @JsonKey(name: 'created_at') DateTime? createdAt,
+    @JsonKey(name: 'updated_at') DateTime? updatedAt,
     @JsonKey(includeFromJson: false, includeToJson: false)
     DocumentReference? reference,
   }) = _FleetModel;

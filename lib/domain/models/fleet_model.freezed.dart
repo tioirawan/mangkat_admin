@@ -22,11 +22,16 @@ FleetModel _$FleetModelFromJson(Map<String, dynamic> json) {
 mixin _$FleetModel {
   String? get id => throw _privateConstructorUsedError;
   String? get vehicleNumber => throw _privateConstructorUsedError;
+  String? get image => throw _privateConstructorUsedError;
   FleetStatus? get status => throw _privateConstructorUsedError;
   FleetType? get type => throw _privateConstructorUsedError;
   String? get notes => throw _privateConstructorUsedError;
   String? get driverRef => throw _privateConstructorUsedError;
-  String? get routeRef => throw _privateConstructorUsedError;
+  String? get routeRef => throw _privateConstructorUsedError; // timestamp
+  @JsonKey(name: 'created_at')
+  DateTime? get createdAt => throw _privateConstructorUsedError;
+  @JsonKey(name: 'updated_at')
+  DateTime? get updatedAt => throw _privateConstructorUsedError;
   @JsonKey(includeFromJson: false, includeToJson: false)
   DocumentReference<Object?>? get reference =>
       throw _privateConstructorUsedError;
@@ -46,11 +51,14 @@ abstract class $FleetModelCopyWith<$Res> {
   $Res call(
       {String? id,
       String? vehicleNumber,
+      String? image,
       FleetStatus? status,
       FleetType? type,
       String? notes,
       String? driverRef,
       String? routeRef,
+      @JsonKey(name: 'created_at') DateTime? createdAt,
+      @JsonKey(name: 'updated_at') DateTime? updatedAt,
       @JsonKey(includeFromJson: false, includeToJson: false)
       DocumentReference<Object?>? reference});
 }
@@ -70,11 +78,14 @@ class _$FleetModelCopyWithImpl<$Res, $Val extends FleetModel>
   $Res call({
     Object? id = freezed,
     Object? vehicleNumber = freezed,
+    Object? image = freezed,
     Object? status = freezed,
     Object? type = freezed,
     Object? notes = freezed,
     Object? driverRef = freezed,
     Object? routeRef = freezed,
+    Object? createdAt = freezed,
+    Object? updatedAt = freezed,
     Object? reference = freezed,
   }) {
     return _then(_value.copyWith(
@@ -85,6 +96,10 @@ class _$FleetModelCopyWithImpl<$Res, $Val extends FleetModel>
       vehicleNumber: freezed == vehicleNumber
           ? _value.vehicleNumber
           : vehicleNumber // ignore: cast_nullable_to_non_nullable
+              as String?,
+      image: freezed == image
+          ? _value.image
+          : image // ignore: cast_nullable_to_non_nullable
               as String?,
       status: freezed == status
           ? _value.status
@@ -106,6 +121,14 @@ class _$FleetModelCopyWithImpl<$Res, $Val extends FleetModel>
           ? _value.routeRef
           : routeRef // ignore: cast_nullable_to_non_nullable
               as String?,
+      createdAt: freezed == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      updatedAt: freezed == updatedAt
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       reference: freezed == reference
           ? _value.reference
           : reference // ignore: cast_nullable_to_non_nullable
@@ -125,11 +148,14 @@ abstract class _$$FleetModelImplCopyWith<$Res>
   $Res call(
       {String? id,
       String? vehicleNumber,
+      String? image,
       FleetStatus? status,
       FleetType? type,
       String? notes,
       String? driverRef,
       String? routeRef,
+      @JsonKey(name: 'created_at') DateTime? createdAt,
+      @JsonKey(name: 'updated_at') DateTime? updatedAt,
       @JsonKey(includeFromJson: false, includeToJson: false)
       DocumentReference<Object?>? reference});
 }
@@ -147,11 +173,14 @@ class __$$FleetModelImplCopyWithImpl<$Res>
   $Res call({
     Object? id = freezed,
     Object? vehicleNumber = freezed,
+    Object? image = freezed,
     Object? status = freezed,
     Object? type = freezed,
     Object? notes = freezed,
     Object? driverRef = freezed,
     Object? routeRef = freezed,
+    Object? createdAt = freezed,
+    Object? updatedAt = freezed,
     Object? reference = freezed,
   }) {
     return _then(_$FleetModelImpl(
@@ -162,6 +191,10 @@ class __$$FleetModelImplCopyWithImpl<$Res>
       vehicleNumber: freezed == vehicleNumber
           ? _value.vehicleNumber
           : vehicleNumber // ignore: cast_nullable_to_non_nullable
+              as String?,
+      image: freezed == image
+          ? _value.image
+          : image // ignore: cast_nullable_to_non_nullable
               as String?,
       status: freezed == status
           ? _value.status
@@ -183,6 +216,14 @@ class __$$FleetModelImplCopyWithImpl<$Res>
           ? _value.routeRef
           : routeRef // ignore: cast_nullable_to_non_nullable
               as String?,
+      createdAt: freezed == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      updatedAt: freezed == updatedAt
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       reference: freezed == reference
           ? _value.reference
           : reference // ignore: cast_nullable_to_non_nullable
@@ -197,11 +238,14 @@ class _$FleetModelImpl extends _FleetModel {
   _$FleetModelImpl(
       {this.id,
       this.vehicleNumber,
+      this.image,
       this.status,
       this.type,
       this.notes,
       this.driverRef,
       this.routeRef,
+      @JsonKey(name: 'created_at') this.createdAt,
+      @JsonKey(name: 'updated_at') this.updatedAt,
       @JsonKey(includeFromJson: false, includeToJson: false) this.reference})
       : super._();
 
@@ -213,6 +257,8 @@ class _$FleetModelImpl extends _FleetModel {
   @override
   final String? vehicleNumber;
   @override
+  final String? image;
+  @override
   final FleetStatus? status;
   @override
   final FleetType? type;
@@ -222,13 +268,20 @@ class _$FleetModelImpl extends _FleetModel {
   final String? driverRef;
   @override
   final String? routeRef;
+// timestamp
+  @override
+  @JsonKey(name: 'created_at')
+  final DateTime? createdAt;
+  @override
+  @JsonKey(name: 'updated_at')
+  final DateTime? updatedAt;
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   final DocumentReference<Object?>? reference;
 
   @override
   String toString() {
-    return 'FleetModel(id: $id, vehicleNumber: $vehicleNumber, status: $status, type: $type, notes: $notes, driverRef: $driverRef, routeRef: $routeRef, reference: $reference)';
+    return 'FleetModel(id: $id, vehicleNumber: $vehicleNumber, image: $image, status: $status, type: $type, notes: $notes, driverRef: $driverRef, routeRef: $routeRef, createdAt: $createdAt, updatedAt: $updatedAt, reference: $reference)';
   }
 
   @override
@@ -239,6 +292,7 @@ class _$FleetModelImpl extends _FleetModel {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.vehicleNumber, vehicleNumber) ||
                 other.vehicleNumber == vehicleNumber) &&
+            (identical(other.image, image) || other.image == image) &&
             (identical(other.status, status) || other.status == status) &&
             (identical(other.type, type) || other.type == type) &&
             (identical(other.notes, notes) || other.notes == notes) &&
@@ -246,14 +300,18 @@ class _$FleetModelImpl extends _FleetModel {
                 other.driverRef == driverRef) &&
             (identical(other.routeRef, routeRef) ||
                 other.routeRef == routeRef) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
+            (identical(other.updatedAt, updatedAt) ||
+                other.updatedAt == updatedAt) &&
             (identical(other.reference, reference) ||
                 other.reference == reference));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, vehicleNumber, status, type,
-      notes, driverRef, routeRef, reference);
+  int get hashCode => Object.hash(runtimeType, id, vehicleNumber, image, status,
+      type, notes, driverRef, routeRef, createdAt, updatedAt, reference);
 
   @JsonKey(ignore: true)
   @override
@@ -273,11 +331,14 @@ abstract class _FleetModel extends FleetModel {
   factory _FleetModel(
       {final String? id,
       final String? vehicleNumber,
+      final String? image,
       final FleetStatus? status,
       final FleetType? type,
       final String? notes,
       final String? driverRef,
       final String? routeRef,
+      @JsonKey(name: 'created_at') final DateTime? createdAt,
+      @JsonKey(name: 'updated_at') final DateTime? updatedAt,
       @JsonKey(includeFromJson: false, includeToJson: false)
       final DocumentReference<Object?>? reference}) = _$FleetModelImpl;
   _FleetModel._() : super._();
@@ -290,6 +351,8 @@ abstract class _FleetModel extends FleetModel {
   @override
   String? get vehicleNumber;
   @override
+  String? get image;
+  @override
   FleetStatus? get status;
   @override
   FleetType? get type;
@@ -299,6 +362,12 @@ abstract class _FleetModel extends FleetModel {
   String? get driverRef;
   @override
   String? get routeRef;
+  @override // timestamp
+  @JsonKey(name: 'created_at')
+  DateTime? get createdAt;
+  @override
+  @JsonKey(name: 'updated_at')
+  DateTime? get updatedAt;
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   DocumentReference<Object?>? get reference;

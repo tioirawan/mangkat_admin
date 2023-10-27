@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../domain/models/route_model.dart';
 import '../../domain/repositories/route_repository.dart';
-import '../helpers/sizing_helper.dart';
 import '../providers/common/content_window_controller/content_window_controller.dart';
 import '../providers/common/sections/sidebar_content_controller.dart';
 import '../providers/route/routes_provider.dart';
@@ -14,19 +14,11 @@ class RouteManagerWindow extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final rightBar = ref.watch(rightSidebarContentController);
-    final double sidebarWidth = SizingHelper.calculateSidebarWidth(context);
-
     return TableWrapper(
       title: 'Trayek',
-      contentPadding: EdgeInsets.only(
-        right: rightBar[AddRouteWindow.name]!.$1 ? sidebarWidth - 24 : 0,
-      ),
-      onAdd: () {
-        ref
-            .read(rightSidebarContentController.notifier)
-            .toggle(AddRouteWindow.name);
-      },
+      onAdd: () => ref
+          .read(rightSidebarContentController.notifier)
+          .toggle(AddRouteWindow.name),
       onClose: () => ref
           .read(contentWindowProvider.notifier)
           .toggle(ContentWindowType.routeManager),
@@ -96,67 +88,70 @@ class RouteManagerWindow extends ConsumerWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 const Text('0'),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Material(
-                        borderRadius: BorderRadius.circular(4),
-                        color: colorScheme.error,
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(4),
-                          onTap: () async {
-                            final confirm = await showDialog<bool>(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                title: const Text('Konfirmasi'),
-                                content: const Text(
-                                  'Apakah anda yakin ingin menghapus trayek ini?',
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.pop(context, false),
-                                    child: const Text('Batal'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.pop(context, true),
-                                    child: const Text('Hapus'),
-                                  ),
-                                ],
-                              ),
-                            );
-
-                            if (confirm ?? false) {
-                              ref
-                                  .read(routeRepositoryProvider)
-                                  .deleteRoute(route);
-                            }
-                          },
-                          child: const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Icon(
-                              Icons.delete,
-                              size: 16,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                _buildActions(context, ref, route),
               ],
             ),
         ],
       ),
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, s) {
-        print(e);
-        return Center(child: Text(e.toString()));
-      },
+      error: (e, s) => Center(child: Text(e.toString())),
+    );
+  }
+
+  Widget _buildActions(
+    BuildContext context,
+    WidgetRef ref,
+    RouteModel route,
+  ) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Material(
+            borderRadius: BorderRadius.circular(4),
+            color: colorScheme.error,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(4),
+              onTap: () async {
+                final confirm = await showDialog<bool>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('Konfirmasi'),
+                    content: const Text(
+                      'Apakah anda yakin ingin menghapus trayek ini?',
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, false),
+                        child: const Text('Batal'),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, true),
+                        child: const Text('Hapus'),
+                      ),
+                    ],
+                  ),
+                );
+
+                if (confirm ?? false) {
+                  ref.read(routeRepositoryProvider).deleteRoute(route);
+                }
+              },
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(
+                  Icons.delete,
+                  size: 16,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

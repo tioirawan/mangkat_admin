@@ -161,8 +161,6 @@ class _StatisticWindowState extends ConsumerState<StatisticWindow> {
           ),
         );
 
-        print('$routeName Length: ${checkpoints.length},  ${results.length}');
-
         controller.addPolyline(Polyline(
           polylineId: PolylineId('trayek_$routeName'),
           points: results.toList(),

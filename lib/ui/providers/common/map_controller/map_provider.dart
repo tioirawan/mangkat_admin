@@ -63,8 +63,6 @@ class MapControllerNotifier extends StateNotifier<MapState> {
         return marker.markerId != markerId;
       }).toSet(),
     );
-
-    print(state.markers);
   }
 
   @override

@@ -307,6 +307,8 @@ class _AddRouteWindowState extends ConsumerState<AddRouteWindow> {
 
   @override
   Widget build(BuildContext context) {
+    final isFocused =
+        ref.watch(mapControllerProvider.select((state) => state.isFocused));
     final colorScheme = Theme.of(context).colorScheme;
 
     return Container(
@@ -332,9 +334,11 @@ class _AddRouteWindowState extends ConsumerState<AddRouteWindow> {
                   shape: const CircleBorder(),
                   color: Theme.of(context).colorScheme.error,
                   child: InkWell(
-                    onTap: () => ref
-                        .read(rightSidebarContentController.notifier)
-                        .close(AddRouteWindow.name),
+                    onTap: () => isFocused
+                        ? _toggleIsEditingRoute()
+                        : ref
+                            .read(rightSidebarContentController.notifier)
+                            .close(AddRouteWindow.name),
                     customBorder: const CircleBorder(),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),

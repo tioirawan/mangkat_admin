@@ -20,7 +20,7 @@ class MapState {
     return MapState(
       markers: markers ?? this.markers,
       polylines: polylines ?? this.polylines,
-      isFocused: isFocus ?? this.isFocused,
+      isFocused: isFocus ?? isFocused,
     );
   }
 }
