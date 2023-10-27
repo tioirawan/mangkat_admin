@@ -57,21 +57,21 @@ class _AddRouteWindowState extends ConsumerState<AddRouteWindow> {
         if (!_isEditingRoute || isRouteClosed) {
           return;
         }
-        addCheckpoint(event);
+        _addCheckpoint(event);
       },
     );
   }
 
-  Future<void> addCheckpoint(LatLng latLng) async {
+  Future<void> _addCheckpoint(LatLng latLng) async {
     setState(() {
       _checkpoints.add(latLng);
     });
 
     _redrawMarkers();
 
-    RouteService routeService = ref.read(routeServiceProvider);
-
     if (_checkpoints.length > 1) {
+      RouteService routeService = ref.read(routeServiceProvider);
+
       final start = _checkpoints[_checkpoints.length - 2];
       final end = _checkpoints[_checkpoints.length - 1];
 
@@ -83,7 +83,7 @@ class _AddRouteWindowState extends ConsumerState<AddRouteWindow> {
     _redrawRoutes();
   }
 
-  Future<void> removeCheckpoint(int index) async {
+  Future<void> _removeCheckpoint(int index) async {
     final LatLng checkpoint = _checkpoints[index];
 
     // special case for the closing checkpoint cause it's the same as the first, we dont want to remove both
@@ -113,7 +113,6 @@ class _AddRouteWindowState extends ConsumerState<AddRouteWindow> {
           'new_route/checkpoint_${checkpoint.latitude}_${checkpoint.longitude}',
         ));
 
-        // no need to remove marker, because its still being used as the first checkpoint
         return;
       }
     }
@@ -163,6 +162,22 @@ class _AddRouteWindowState extends ConsumerState<AddRouteWindow> {
     _redrawRoutes();
   }
 
+  Set<LatLng> _computeRoutes() {
+    Set<LatLng> points = {};
+
+    LatLng? lastPoint = _checkpoints.isNotEmpty ? _checkpoints.first : null;
+
+    for (final checkpoint in _checkpoints) {
+      if (lastPoint != null) {
+        points.addAll(_routes[(lastPoint, checkpoint)] ?? []);
+      }
+
+      lastPoint = checkpoint;
+    }
+
+    return points;
+  }
+
   void _redrawMarkers() {
     // draw markers
     for (final checkpoint in _checkpoints) {
@@ -179,22 +194,6 @@ class _AddRouteWindowState extends ConsumerState<AddRouteWindow> {
         ),
       );
     }
-  }
-
-  Set<LatLng> _computeRoutes() {
-    Set<LatLng> points = {};
-
-    LatLng? lastPoint = _checkpoints.isNotEmpty ? _checkpoints.first : null;
-
-    for (final checkpoint in _checkpoints) {
-      if (lastPoint != null) {
-        points.addAll(_routes[(lastPoint, checkpoint)] ?? []);
-      }
-
-      lastPoint = checkpoint;
-    }
-
-    return points;
   }
 
   void _redrawRoutes() {
@@ -236,7 +235,7 @@ class _AddRouteWindowState extends ConsumerState<AddRouteWindow> {
       return;
     }
 
-    addCheckpoint(_checkpoints.first);
+    _addCheckpoint(_checkpoints.first);
 
     _zoomToCheckpoints();
 
@@ -284,6 +283,18 @@ class _AddRouteWindowState extends ConsumerState<AddRouteWindow> {
     ref
         .read(contentWindowProvider.notifier)
         .show(ContentWindowType.routeManager);
+  }
+
+  void _toggleIsEditingRoute() {
+    setState(() {
+      _isEditingRoute = !_isEditingRoute;
+
+      if (_isEditingRoute) {
+        mapController.requestFocus();
+      } else {
+        mapController.removeFocus();
+      }
+    });
   }
 
   @override
@@ -470,7 +481,7 @@ class _AddRouteWindowState extends ConsumerState<AddRouteWindow> {
                             borderRadius: BorderRadius.circular(4),
                             child: InkWell(
                               onTap: () {
-                                removeCheckpoint(i);
+                                _removeCheckpoint(i);
                               },
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
@@ -527,18 +538,6 @@ class _AddRouteWindowState extends ConsumerState<AddRouteWindow> {
         ],
       ),
     );
-  }
-
-  void _toggleIsEditingRoute() {
-    setState(() {
-      _isEditingRoute = !_isEditingRoute;
-
-      if (_isEditingRoute) {
-        mapController.requestFocus();
-      } else {
-        mapController.removeFocus();
-      }
-    });
   }
 
   Widget _buildDetailForm(BuildContext context) {

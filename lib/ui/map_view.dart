@@ -38,7 +38,7 @@ class MapViewState extends ConsumerState<MapView> {
           polylineId: PolylineId('route_${route.id!}'),
           points: route.routes ?? [],
           color: route.color ?? Colors.blue,
-          width: 5,
+          width: 4,
           onTap: () => ref
               .read(contentWindowProvider.notifier)
               .toggle(ContentWindowType.routeManager),
