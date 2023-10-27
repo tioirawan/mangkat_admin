@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../domain/models/fleet_model.dart';
 import '../../domain/models/route_model.dart';
 import '../../domain/repositories/route_repository.dart';
 import '../providers/common/content_window_controller/content_window_controller.dart';
 import '../providers/common/sections/sidebar_content_controller.dart';
+import '../providers/route/route_fleets_provider.dart';
 import '../providers/route/routes_provider.dart';
 import 'common/table_wrapper.dart';
 import 'sidebars/add_route_window.dart';
@@ -114,10 +116,43 @@ class _RouteManagerWindowState extends ConsumerState<RouteManagerWindow> {
                 route.description ?? '-',
                 overflow: TextOverflow.ellipsis,
               ),
-              const Text('0'),
+              _buildStatus(context, route),
               _buildActions(context, route),
             ],
           ),
+      ],
+    );
+  }
+
+  Widget _buildStatus(
+    BuildContext context,
+    RouteModel route,
+  ) {
+    final fleets = ref.watch(routeFleetNumberProvider(route));
+    final operatingFleets =
+        fleets.where((fleet) => fleet.status == FleetStatus.operating).toList();
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Text(
+            '${operatingFleets.length} / ${fleets.length}',
+            style: TextStyle(
+              color: colorScheme.onBackground,
+              fontSize: 12,
+              fontStyle: FontStyle.normal,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Icon(
+          Icons.directions_bus_rounded,
+          size: 16,
+          color: colorScheme.onBackground,
+        ),
       ],
     );
   }

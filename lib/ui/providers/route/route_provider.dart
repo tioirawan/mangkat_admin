@@ -7,6 +7,10 @@ final routeProvider =
     StateProvider.family<RouteModel?, String?>((ref, routePath) {
   final routeState = ref.watch(routesProvider);
 
+  if (routePath == null || routeState is AsyncLoading) {
+    return null;
+  }
+
   final List<RouteModel> routes = routeState.maybeWhen(
     data: (routes) => routes,
     orElse: () => [],
