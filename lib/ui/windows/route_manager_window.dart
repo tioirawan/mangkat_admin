@@ -7,7 +7,6 @@ import '../../domain/models/route_model.dart';
 import '../../domain/repositories/route_repository.dart';
 import '../helpers/map_helper.dart';
 import '../providers/common/content_window_controller/content_window_controller.dart';
-import '../providers/common/map_controller/map_bound_provider.dart';
 import '../providers/common/map_controller/map_provider.dart';
 import '../providers/common/sections/sidebar_content_controller.dart';
 import '../providers/route/focused_route_provider.dart';
@@ -228,12 +227,6 @@ class _RouteManagerWindowState extends ConsumerState<RouteManagerWindow> {
                       ));
                 } else {
                   ref.read(focusedRouteProvider.notifier).state = null;
-                  ref.read(mapControllerProvider.notifier).animateCamera(
-                        CameraUpdate.newLatLngBounds(
-                          ref.read(mapBoundProvider),
-                          64,
-                        ),
-                      );
                 }
               },
               child: Padding(

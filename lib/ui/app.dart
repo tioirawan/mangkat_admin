@@ -8,6 +8,7 @@ import 'map_view.dart';
 import 'providers/common/map_controller/map_provider.dart';
 import 'sections/bottom_dock.dart';
 import 'sections/content.dart';
+import 'sections/control_bar.dart';
 import 'sections/left_bar.dart';
 import 'sections/right_bar.dart';
 import 'sections/top_bar.dart';
@@ -76,6 +77,26 @@ class App extends ConsumerWidget {
                   child: isFocused
                       ? const SizedBox.shrink()
                       : PointerInterceptor(child: const TopBar()),
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: 24,
+              left: 24,
+              child: Center(
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 200),
+                  switchInCurve: Curves.easeIn,
+                  transitionBuilder: (child, animation) => SlideTransition(
+                    position: Tween<Offset>(
+                      begin: const Offset(-1, 0),
+                      end: Offset.zero,
+                    ).animate(animation),
+                    child: child,
+                  ),
+                  child: isFocused
+                      ? const SizedBox.shrink()
+                      : PointerInterceptor(child: const ControlBar()),
                 ),
               ),
             ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../helpers/date_helper.dart';
@@ -33,7 +34,13 @@ class _TopBarState extends ConsumerState<TopBar>
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.sunny, color: Colors.orange),
+          const Icon(Icons.sunny, color: Colors.orange)
+              .animate(
+                onPlay: (controller) => controller.repeat(),
+              )
+              .rotate(
+                duration: 15.seconds,
+              ),
           const SizedBox(width: 8),
           AnimatedBuilder(
             animation: _animationController,
