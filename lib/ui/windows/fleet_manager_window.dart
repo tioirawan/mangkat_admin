@@ -98,15 +98,18 @@ class _FleetManagerWindowState extends ConsumerState<FleetManagerWindow> {
             children: [
               Row(
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(4),
-                    child: CachedNetworkImage(
-                      imageUrl: fleet.image ?? '',
-                      width: 38,
-                      height: 38,
-                      fit: BoxFit.cover,
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.directions_bus_rounded),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4.0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(4),
+                      child: CachedNetworkImage(
+                        imageUrl: fleet.image ?? '',
+                        width: 38,
+                        height: 38,
+                        fit: BoxFit.cover,
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.directions_bus_rounded),
+                      ),
                     ),
                   ),
                   const SizedBox(width: 8),

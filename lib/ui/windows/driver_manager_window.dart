@@ -70,7 +70,6 @@ class _DriverManagerWindowState extends ConsumerState<DriverManagerWindow> {
       return Center(
         child: Column(
           children: [
-            // illustration
             const SizedBox(height: 18),
             const Icon(
               Icons.person_off_rounded,
@@ -116,15 +115,18 @@ class _DriverManagerWindowState extends ConsumerState<DriverManagerWindow> {
   Widget _buildDriverInfo(BuildContext context, DriverModel driver) {
     return Row(
       children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(4),
-          child: CachedNetworkImage(
-            imageUrl: driver.image ?? '',
-            width: 38,
-            height: 38,
-            fit: BoxFit.cover,
-            errorWidget: (context, url, error) =>
-                const Icon(Icons.person_rounded),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: CachedNetworkImage(
+              imageUrl: driver.image ?? '',
+              width: 38,
+              height: 38,
+              fit: BoxFit.cover,
+              errorWidget: (context, url, error) =>
+                  const Icon(Icons.person_rounded),
+            ),
           ),
         ),
         const SizedBox(width: 8),
