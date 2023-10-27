@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../domain/models/fleet_model.dart';
 import '../../domain/models/route_model.dart';
 import '../../domain/repositories/route_repository.dart';
+import '../helpers/map_helper.dart';
 import '../providers/common/content_window_controller/content_window_controller.dart';
+import '../providers/common/map_controller/map_bound_provider.dart';
+import '../providers/common/map_controller/map_provider.dart';
 import '../providers/common/sections/sidebar_content_controller.dart';
+import '../providers/route/focused_route_provider.dart';
 import '../providers/route/route_fleets_provider.dart';
 import '../providers/route/routes_provider.dart';
 import '../widgets/route_pill.dart';
@@ -44,6 +49,8 @@ class _RouteManagerWindowState extends ConsumerState<RouteManagerWindow> {
   }
 
   Widget _buildTable(BuildContext context, List<RouteModel> routes) {
+    final focusedRoute = ref.watch(focusedRouteProvider);
+
     final colorScheme = Theme.of(context).colorScheme;
     final headerStyle = TextStyle(
       color: colorScheme.onBackground,
@@ -84,6 +91,7 @@ class _RouteManagerWindowState extends ConsumerState<RouteManagerWindow> {
     }
 
     return Table(
+      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
       children: [
         TableRow(
           children: headers
@@ -97,6 +105,12 @@ class _RouteManagerWindowState extends ConsumerState<RouteManagerWindow> {
         ),
         for (final route in routes)
           TableRow(
+            decoration: BoxDecoration(
+              color: route.id == focusedRoute?.id
+                  ? colorScheme.primary.withOpacity(0.1)
+                  : null,
+              borderRadius: BorderRadius.circular(4),
+            ),
             children: [
               _buildRouteName(route),
               Text('${route.distance.toStringAsFixed(2)} km'),
@@ -108,7 +122,7 @@ class _RouteManagerWindowState extends ConsumerState<RouteManagerWindow> {
                 overflow: TextOverflow.ellipsis,
               ),
               _buildStatus(context, route),
-              _buildActions(context, route),
+              _buildActions(context, route, route.id == focusedRoute?.id),
             ],
           ),
       ],
@@ -143,9 +157,12 @@ class _RouteManagerWindowState extends ConsumerState<RouteManagerWindow> {
   }
 
   Widget _buildRouteName(RouteModel route) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: RoutePill(route: route),
+    return Padding(
+      padding: const EdgeInsets.only(left: 4.0),
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: RoutePill(route: route),
+      ),
     );
   }
 
@@ -185,14 +202,51 @@ class _RouteManagerWindowState extends ConsumerState<RouteManagerWindow> {
   Widget _buildActions(
     BuildContext context,
     RouteModel route,
+    bool isFocused,
   ) {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
+      padding: const EdgeInsets.all(4.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          Material(
+            borderRadius: BorderRadius.circular(4),
+            color: colorScheme.tertiary,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(4),
+              onTap: () {
+                if (!isFocused) {
+                  ref.read(focusedRouteProvider.notifier).state = route;
+                  ref
+                      .read(mapControllerProvider.notifier)
+                      .animateCamera(CameraUpdate.newLatLngBounds(
+                        MapHelper.computeBounds(route.routes!)!,
+                        64,
+                      ));
+                } else {
+                  ref.read(focusedRouteProvider.notifier).state = null;
+                  ref.read(mapControllerProvider.notifier).animateCamera(
+                        CameraUpdate.newLatLngBounds(
+                          ref.read(mapBoundProvider),
+                          64,
+                        ),
+                      );
+                }
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(
+                  isFocused ? Icons.close : Icons.remove_red_eye_rounded,
+                  size: 16,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
           Material(
             borderRadius: BorderRadius.circular(4),
             color: colorScheme.primary,

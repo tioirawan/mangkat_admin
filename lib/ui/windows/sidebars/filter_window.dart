@@ -42,6 +42,7 @@ class _StatisticWindowState extends ConsumerState<FilterWindow> {
               color: Theme.of(context).colorScheme.surface,
               shape: const CircleBorder(),
               child: InkWell(
+                customBorder: const CircleBorder(),
                 onTap: () => setState(() => _isMinimized = false),
                 child: const Padding(
                   padding: EdgeInsets.all(16.0),

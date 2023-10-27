@@ -23,7 +23,7 @@ class App extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final double sidebarWidth = SizingHelper.calculateSidebarWidth(context);
     final isFocused = ref.watch(
-      mapControllerProvider.select((value) => value.isFocused),
+      mapControllerProvider.select((value) => value.cleanMode),
     );
 
     return MaterialApp(

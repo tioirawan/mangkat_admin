@@ -6,7 +6,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../domain/models/route_model.dart';
 import 'providers/common/content_window_controller/content_window_controller.dart';
 import 'providers/common/map_controller/map_provider.dart';
-import 'providers/route/route_on_edit_provider.dart';
+import 'providers/route/edited_route_provider.dart';
+import 'providers/route/focused_route_provider.dart';
 import 'providers/route/routes_filtered_provider.dart';
 
 class MapView extends ConsumerStatefulWidget {
@@ -26,11 +27,12 @@ class MapViewState extends ConsumerState<MapView> {
   Widget build(BuildContext context) {
     final state = ref.watch(mapControllerProvider);
     final routes = ref.watch(routeFilteredProvider);
-    final editedRoute = ref.watch(routeOnEditProvider);
+    final focusedRoute = ref.watch(focusedRouteProvider);
+    final editedRoute = ref.watch(editedRouteProvider);
 
     Set<Polyline> polylines = state.polylines;
 
-    if (!state.isFocused) {
+    if (!state.cleanMode) {
       for (final RouteModel route in routes) {
         if (route.id == null ||
             route.routes == null ||
@@ -39,14 +41,26 @@ class MapViewState extends ConsumerState<MapView> {
           continue;
         }
 
+        Color color = route.color ?? Colors.blue;
+        int zIndex = 0;
+
+        if (focusedRoute?.id != null && route.id != focusedRoute?.id) {
+          color = color.withOpacity(0.5);
+          zIndex = 1;
+        }
+
         final polyline = Polyline(
           polylineId: PolylineId('route_${route.id!}'),
           points: route.routes ?? [],
-          color: route.color ?? Colors.blue,
+          color: color,
           width: 4,
-          onTap: () => ref
-              .read(contentWindowProvider.notifier)
-              .toggle(ContentWindowType.routeManager),
+          zIndex: zIndex,
+          onTap: () {
+            ref.read(focusedRouteProvider.notifier).state = route;
+            ref
+                .read(contentWindowProvider.notifier)
+                .show(ContentWindowType.routeManager);
+          },
         );
 
         polylines = {
@@ -60,7 +74,7 @@ class MapViewState extends ConsumerState<MapView> {
       duration: 200.milliseconds,
       curve: Curves.easeInOut,
       color: Theme.of(context).colorScheme.primary,
-      padding: state.isFocused ? const EdgeInsets.all(16) : EdgeInsets.zero,
+      padding: state.cleanMode ? const EdgeInsets.all(16) : EdgeInsets.zero,
       child: GoogleMap(
         trafficEnabled: false,
         cloudMapId: 'c92510ddc71ac5fc',
@@ -68,6 +82,10 @@ class MapViewState extends ConsumerState<MapView> {
         markers: state.markers,
         polylines: polylines,
         onTap: (LatLng latLng) {
+          // if (editedRoute == null && focusedRoute != null) {
+          //   ref.read(focusedRouteProvider.notifier).state = null;
+          // }
+
           ref.read(mapControllerProvider.notifier).onTap(latLng);
         },
         onMapCreated: (GoogleMapController controller) {

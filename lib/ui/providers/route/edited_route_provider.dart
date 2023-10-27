@@ -3,4 +3,4 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../domain/models/route_model.dart';
 
-final routeOnEditProvider = StateProvider<RouteModel?>((ref) => null);
+final editedRouteProvider = StateProvider<RouteModel?>((ref) => null);

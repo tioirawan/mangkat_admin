@@ -15,7 +15,7 @@ import '../../providers/common/events/global_events.dart';
 import '../../providers/common/events/global_events_provider.dart';
 import '../../providers/common/map_controller/map_provider.dart';
 import '../../providers/common/sections/sidebar_content_controller.dart';
-import '../../providers/route/route_on_edit_provider.dart';
+import '../../providers/route/edited_route_provider.dart';
 import '../../themes/app_theme.dart';
 
 class AddRouteWindow extends ConsumerStatefulWidget {
@@ -76,7 +76,7 @@ class _AddRouteWindowState extends ConsumerState<AddRouteWindow> {
       if (widget.route != null) {
         _computeAllRoutes();
         _redrawMarkers();
-        ref.read(routeOnEditProvider.notifier).state = widget.route;
+        ref.read(editedRouteProvider.notifier).state = widget.route;
       }
     });
 
@@ -362,7 +362,7 @@ class _AddRouteWindowState extends ConsumerState<AddRouteWindow> {
   @override
   Widget build(BuildContext context) {
     final isFocused =
-        ref.watch(mapControllerProvider.select((state) => state.isFocused));
+        ref.watch(mapControllerProvider.select((state) => state.cleanMode));
     final colorScheme = Theme.of(context).colorScheme;
 
     ref.listen(globalEventsProvider, _handleWindowClosing);
@@ -604,7 +604,7 @@ class _AddRouteWindowState extends ConsumerState<AddRouteWindow> {
     if (event is GlobalEventAddRouteWindowWillClose) {
       _clearMarkers();
       _clearPolylines();
-      ref.read(routeOnEditProvider.notifier).state = null;
+      ref.read(editedRouteProvider.notifier).state = null;
     }
   }
 

@@ -26,7 +26,7 @@ class Content extends ConsumerWidget {
 
     return AnimatedSwitcher(
       duration: 250.milliseconds,
-      reverseDuration: 100.milliseconds,
+      reverseDuration: 250.milliseconds,
       switchInCurve: Curves.easeOut,
       switchOutCurve: Curves.easeIn,
       transitionBuilder: (child, animation) => FadeTransition(

@@ -12,7 +12,7 @@ class LeftBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final contents = ref.watch(leftSidebarContentController);
     final isFocused = ref.watch(
-      mapControllerProvider.select((value) => value.isFocused),
+      mapControllerProvider.select((value) => value.cleanMode),
     );
 
     return ListView(

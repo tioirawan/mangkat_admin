@@ -30,11 +30,11 @@ class MapControllerNotifier extends StateNotifier<MapState> {
   }
 
   void requestFocus() {
-    state = state.copyWith(isFocus: true);
+    state = state.copyWith(cleanMode: true);
   }
 
   void removeFocus() {
-    state = state.copyWith(isFocus: false);
+    state = state.copyWith(cleanMode: false);
   }
 
   void addMarker(Marker marker) {

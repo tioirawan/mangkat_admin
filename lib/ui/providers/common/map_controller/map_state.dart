@@ -3,24 +3,24 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 class MapState {
   final Set<Marker> markers;
   final Set<Polyline> polylines;
-  final bool isFocused;
+  final bool cleanMode;
 
   const MapState({
     this.markers = const {},
     this.polylines = const {},
-    this.isFocused = false,
+    this.cleanMode = false,
   });
 
   // copy with method
   MapState copyWith({
     Set<Marker>? markers,
     Set<Polyline>? polylines,
-    bool? isFocus,
+    bool? cleanMode,
   }) {
     return MapState(
       markers: markers ?? this.markers,
       polylines: polylines ?? this.polylines,
-      isFocused: isFocus ?? isFocused,
+      cleanMode: cleanMode ?? this.cleanMode,
     );
   }
 }
