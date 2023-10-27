@@ -102,7 +102,7 @@ class _RouteManagerWindowState extends ConsumerState<RouteManagerWindow> {
               Text('${route.distance.toStringAsFixed(2)} km'),
               Text(route.startOperation?.format(context) ?? '-'),
               Text(route.endOperation?.format(context) ?? '-'),
-              Text(route.type?.name ?? '-'),
+              _buildRouteType(route),
               Text(
                 route.description ?? '-',
                 overflow: TextOverflow.ellipsis,
@@ -112,6 +112,33 @@ class _RouteManagerWindowState extends ConsumerState<RouteManagerWindow> {
             ],
           ),
       ],
+    );
+  }
+
+  Widget _buildRouteType(RouteModel route) {
+    final color = switch (route.type) {
+      RouteType.fixed => const Color(0xff27ae60),
+      RouteType.temporary => const Color(0xff2980b9),
+      _ => const Color.fromARGB(255, 181, 181, 181),
+    };
+
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(999),
+        ),
+        child: Text(
+          route.type?.name ?? '',
+          style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+                fontSize: 10,
+              ),
+        ),
+      ),
     );
   }
 

@@ -20,9 +20,9 @@ extension RouteTypeX on RouteType {
   String get name {
     switch (this) {
       case RouteType.fixed:
-        return 'SEMENTARA';
-      case RouteType.temporary:
         return 'TETAP';
+      case RouteType.temporary:
+        return 'SEMENTARA';
     }
   }
 }
