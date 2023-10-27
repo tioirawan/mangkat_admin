@@ -39,6 +39,7 @@ class _StatisticWindowState extends ConsumerState<FilterWindow> {
       child: _isMinimized
           ? Material(
               elevation: 1,
+              color: Theme.of(context).colorScheme.surface,
               shape: const CircleBorder(),
               child: InkWell(
                 onTap: () => setState(() => _isMinimized = false),
