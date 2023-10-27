@@ -6,6 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../domain/models/route_model.dart';
 import 'providers/common/content_window_controller/content_window_controller.dart';
 import 'providers/common/map_controller/map_provider.dart';
+import 'providers/route/route_on_edit_provider.dart';
 import 'providers/route/routes_provider.dart';
 
 class MapView extends ConsumerStatefulWidget {
@@ -25,12 +26,16 @@ class MapViewState extends ConsumerState<MapView> {
   Widget build(BuildContext context) {
     final state = ref.watch(mapControllerProvider);
     final routes = ref.watch(routesProvider);
+    final editedRoute = ref.watch(routeOnEditProvider);
 
     Set<Polyline> polylines = state.polylines;
 
     if (!state.isFocused) {
       for (final RouteModel route in routes.asData?.value ?? []) {
-        if (route.id == null || route.routes == null || route.color == null) {
+        if (route.id == null ||
+            route.routes == null ||
+            route.color == null ||
+            editedRoute?.id == route.id) {
           continue;
         }
 

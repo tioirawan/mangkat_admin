@@ -22,13 +22,19 @@ RouteModel _$RouteModelFromJson(Map<String, dynamic> json) {
 mixin _$RouteModel {
   String? get id => throw _privateConstructorUsedError;
   String? get name => throw _privateConstructorUsedError;
-  @JsonKey(name: 'start_operation')
-  String? get startOperation => throw _privateConstructorUsedError;
-  @JsonKey(name: 'end_operation')
-  String? get endOperation => throw _privateConstructorUsedError;
+  @JsonKey(
+      name: 'start_operation',
+      toJson: _encodeTimeOfDay,
+      fromJson: _decodeTimeOfDay)
+  TimeOfDay? get startOperation => throw _privateConstructorUsedError;
+  @JsonKey(
+      name: 'end_operation',
+      toJson: _encodeTimeOfDay,
+      fromJson: _decodeTimeOfDay)
+  TimeOfDay? get endOperation => throw _privateConstructorUsedError;
   @JsonKey(toJson: _encodeColor, fromJson: _decodeColor)
   Color? get color => throw _privateConstructorUsedError;
-  String? get type => throw _privateConstructorUsedError;
+  RouteType? get type => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
   @JsonKey(toJson: _encodeLatLngList, fromJson: _decodeLatLngList)
   List<LatLng>? get checkpoints => throw _privateConstructorUsedError;
@@ -53,10 +59,18 @@ abstract class $RouteModelCopyWith<$Res> {
   $Res call(
       {String? id,
       String? name,
-      @JsonKey(name: 'start_operation') String? startOperation,
-      @JsonKey(name: 'end_operation') String? endOperation,
+      @JsonKey(
+          name: 'start_operation',
+          toJson: _encodeTimeOfDay,
+          fromJson: _decodeTimeOfDay)
+      TimeOfDay? startOperation,
+      @JsonKey(
+          name: 'end_operation',
+          toJson: _encodeTimeOfDay,
+          fromJson: _decodeTimeOfDay)
+      TimeOfDay? endOperation,
       @JsonKey(toJson: _encodeColor, fromJson: _decodeColor) Color? color,
-      String? type,
+      RouteType? type,
       String? description,
       @JsonKey(toJson: _encodeLatLngList, fromJson: _decodeLatLngList)
       List<LatLng>? checkpoints,
@@ -102,11 +116,11 @@ class _$RouteModelCopyWithImpl<$Res, $Val extends RouteModel>
       startOperation: freezed == startOperation
           ? _value.startOperation
           : startOperation // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as TimeOfDay?,
       endOperation: freezed == endOperation
           ? _value.endOperation
           : endOperation // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as TimeOfDay?,
       color: freezed == color
           ? _value.color
           : color // ignore: cast_nullable_to_non_nullable
@@ -114,7 +128,7 @@ class _$RouteModelCopyWithImpl<$Res, $Val extends RouteModel>
       type: freezed == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as RouteType?,
       description: freezed == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
@@ -145,10 +159,18 @@ abstract class _$$RouteImplCopyWith<$Res> implements $RouteModelCopyWith<$Res> {
   $Res call(
       {String? id,
       String? name,
-      @JsonKey(name: 'start_operation') String? startOperation,
-      @JsonKey(name: 'end_operation') String? endOperation,
+      @JsonKey(
+          name: 'start_operation',
+          toJson: _encodeTimeOfDay,
+          fromJson: _decodeTimeOfDay)
+      TimeOfDay? startOperation,
+      @JsonKey(
+          name: 'end_operation',
+          toJson: _encodeTimeOfDay,
+          fromJson: _decodeTimeOfDay)
+      TimeOfDay? endOperation,
       @JsonKey(toJson: _encodeColor, fromJson: _decodeColor) Color? color,
-      String? type,
+      RouteType? type,
       String? description,
       @JsonKey(toJson: _encodeLatLngList, fromJson: _decodeLatLngList)
       List<LatLng>? checkpoints,
@@ -192,11 +214,11 @@ class __$$RouteImplCopyWithImpl<$Res>
       startOperation: freezed == startOperation
           ? _value.startOperation
           : startOperation // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as TimeOfDay?,
       endOperation: freezed == endOperation
           ? _value.endOperation
           : endOperation // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as TimeOfDay?,
       color: freezed == color
           ? _value.color
           : color // ignore: cast_nullable_to_non_nullable
@@ -204,7 +226,7 @@ class __$$RouteImplCopyWithImpl<$Res>
       type: freezed == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as RouteType?,
       description: freezed == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
@@ -231,8 +253,16 @@ class _$RouteImpl extends _Route {
   const _$RouteImpl(
       {this.id,
       this.name,
-      @JsonKey(name: 'start_operation') this.startOperation,
-      @JsonKey(name: 'end_operation') this.endOperation,
+      @JsonKey(
+          name: 'start_operation',
+          toJson: _encodeTimeOfDay,
+          fromJson: _decodeTimeOfDay)
+      this.startOperation,
+      @JsonKey(
+          name: 'end_operation',
+          toJson: _encodeTimeOfDay,
+          fromJson: _decodeTimeOfDay)
+      this.endOperation,
       @JsonKey(toJson: _encodeColor, fromJson: _decodeColor) this.color,
       this.type,
       this.description,
@@ -253,16 +283,22 @@ class _$RouteImpl extends _Route {
   @override
   final String? name;
   @override
-  @JsonKey(name: 'start_operation')
-  final String? startOperation;
+  @JsonKey(
+      name: 'start_operation',
+      toJson: _encodeTimeOfDay,
+      fromJson: _decodeTimeOfDay)
+  final TimeOfDay? startOperation;
   @override
-  @JsonKey(name: 'end_operation')
-  final String? endOperation;
+  @JsonKey(
+      name: 'end_operation',
+      toJson: _encodeTimeOfDay,
+      fromJson: _decodeTimeOfDay)
+  final TimeOfDay? endOperation;
   @override
   @JsonKey(toJson: _encodeColor, fromJson: _decodeColor)
   final Color? color;
   @override
-  final String? type;
+  final RouteType? type;
   @override
   final String? description;
   final List<LatLng>? _checkpoints;
@@ -351,10 +387,18 @@ abstract class _Route extends RouteModel {
   const factory _Route(
       {final String? id,
       final String? name,
-      @JsonKey(name: 'start_operation') final String? startOperation,
-      @JsonKey(name: 'end_operation') final String? endOperation,
+      @JsonKey(
+          name: 'start_operation',
+          toJson: _encodeTimeOfDay,
+          fromJson: _decodeTimeOfDay)
+      final TimeOfDay? startOperation,
+      @JsonKey(
+          name: 'end_operation',
+          toJson: _encodeTimeOfDay,
+          fromJson: _decodeTimeOfDay)
+      final TimeOfDay? endOperation,
       @JsonKey(toJson: _encodeColor, fromJson: _decodeColor) final Color? color,
-      final String? type,
+      final RouteType? type,
       final String? description,
       @JsonKey(toJson: _encodeLatLngList, fromJson: _decodeLatLngList)
       final List<LatLng>? checkpoints,
@@ -371,16 +415,22 @@ abstract class _Route extends RouteModel {
   @override
   String? get name;
   @override
-  @JsonKey(name: 'start_operation')
-  String? get startOperation;
+  @JsonKey(
+      name: 'start_operation',
+      toJson: _encodeTimeOfDay,
+      fromJson: _decodeTimeOfDay)
+  TimeOfDay? get startOperation;
   @override
-  @JsonKey(name: 'end_operation')
-  String? get endOperation;
+  @JsonKey(
+      name: 'end_operation',
+      toJson: _encodeTimeOfDay,
+      fromJson: _decodeTimeOfDay)
+  TimeOfDay? get endOperation;
   @override
   @JsonKey(toJson: _encodeColor, fromJson: _decodeColor)
   Color? get color;
   @override
-  String? get type;
+  RouteType? get type;
   @override
   String? get description;
   @override

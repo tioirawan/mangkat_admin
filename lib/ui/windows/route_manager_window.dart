@@ -100,9 +100,9 @@ class _RouteManagerWindowState extends ConsumerState<RouteManagerWindow> {
             children: [
               _buildRouteName(route),
               Text('${route.distance.toStringAsFixed(2)} km'),
-              Text(route.startOperation ?? '-'),
-              Text(route.endOperation ?? '-'),
-              Text(route.type ?? '-'),
+              Text(route.startOperation?.format(context) ?? '-'),
+              Text(route.endOperation?.format(context) ?? '-'),
+              Text(route.type?.name ?? '-'),
               Text(
                 route.description ?? '-',
                 overflow: TextOverflow.ellipsis,
@@ -166,6 +166,25 @@ class _RouteManagerWindowState extends ConsumerState<RouteManagerWindow> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
+          Material(
+            borderRadius: BorderRadius.circular(4),
+            color: colorScheme.primary,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(4),
+              onTap: () => ref
+                  .read(rightSidebarContentController.notifier)
+                  .open(AddRouteWindow.name, route),
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(
+                  Icons.edit,
+                  size: 16,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
           Material(
             borderRadius: BorderRadius.circular(4),
             color: colorScheme.error,

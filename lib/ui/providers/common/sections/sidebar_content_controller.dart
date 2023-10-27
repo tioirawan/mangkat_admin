@@ -3,15 +3,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../domain/models/driver_model.dart';
 import '../../../../domain/models/fleet_model.dart';
+import '../../../../domain/models/route_model.dart';
 import '../../../windows/sidebars/add_driver_window.dart';
 import '../../../windows/sidebars/add_fleet_window.dart';
 import '../../../windows/sidebars/add_route_window.dart';
 import '../../../windows/sidebars/statistic_window.dart';
+import '../events/global_events.dart';
+import '../events/global_events_provider.dart';
 
 final leftSidebarContentController =
     StateNotifierProvider<ContentWindowNotifier, Map<String, (bool, Widget)>>(
-  (_) => ContentWindowNotifier()
-    ..register(
+  (ref) => ContentWindowNotifier(
+    ref.read(globalEventsProvider.notifier),
+  )..register(
       StatisticWindow.name,
       (_) => const StatisticWindow(),
       false,
@@ -20,7 +24,9 @@ final leftSidebarContentController =
 
 final rightSidebarContentController =
     StateNotifierProvider<ContentWindowNotifier, Map<String, (bool, Widget)>>(
-  (_) => ContentWindowNotifier()
+  (ref) => ContentWindowNotifier(
+    ref.read(globalEventsProvider.notifier),
+  )
     ..register(
       StatisticWindow.name,
       (_) => const StatisticWindow(),
@@ -28,7 +34,9 @@ final rightSidebarContentController =
     )
     ..register(
       AddRouteWindow.name,
-      (Object? arg) => const AddRouteWindow(),
+      (Object? arg) => AddRouteWindow(
+        route: arg as RouteModel?,
+      ),
       false,
     )
     ..register(
@@ -48,7 +56,11 @@ final rightSidebarContentController =
 );
 
 class ContentWindowNotifier extends StateNotifier<Map<String, (bool, Widget)>> {
-  ContentWindowNotifier() : super({});
+  final GlobalEventsNotifier _globalEventsNotifier;
+
+  ContentWindowNotifier(
+    this._globalEventsNotifier,
+  ) : super({});
 
   // used as a way to pass argument to the window
   final Map<String, Widget Function(Object?)> builders = {};
@@ -84,13 +96,17 @@ class ContentWindowNotifier extends StateNotifier<Map<String, (bool, Widget)>> {
     final newWindow = build(id, argument);
 
     if (isVisible) {
+      // close the window
+      if (id == AddRouteWindow.name) {
+        _globalEventsNotifier.add(GlobalEventAddRouteWindowWillClose());
+      }
+
       state = {
         id: (false, newWindow),
         ...state..remove(id), // trick to put the last item to the top
       };
     } else {
-      if (argument != null) {}
-
+      // open the window
       state = {
         id: (true, newWindow),
         ...state..remove(id),
@@ -122,6 +138,10 @@ class ContentWindowNotifier extends StateNotifier<Map<String, (bool, Widget)>> {
     }
 
     final (_, window) = state[id]!;
+
+    if (id == AddRouteWindow.name) {
+      _globalEventsNotifier.add(GlobalEventAddRouteWindowWillClose());
+    }
 
     state = {
       ...state,

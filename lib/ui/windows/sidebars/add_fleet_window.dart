@@ -11,6 +11,7 @@ import '../../../domain/services/image_picker_service.dart';
 import '../../providers/common/sections/sidebar_content_controller.dart';
 import '../../providers/route/routes_provider.dart';
 import '../../themes/app_theme.dart';
+import '../../widgets/route_pill.dart';
 
 class AddFleetWindow extends ConsumerStatefulWidget {
   static const String name = 'window/add-fleet';
@@ -265,33 +266,42 @@ class _AddFleetWindowState extends ConsumerState<AddFleetWindow> {
             final routesState = ref.watch(routesProvider);
 
             return routesState.when(
-              data: (routes) => DropdownButtonFormField<String?>(
-                value: routeRef,
-                decoration: const InputDecoration(
-                  labelText: 'Trayek',
-                ),
-                items: routes
-                    .where((route) => route.reference != null)
-                    .map(
-                      (route) => DropdownMenuItem(
-                        value: route.reference!.path,
-                        child: Text(route.name ?? ''),
-                      ),
-                    )
-                    .toList()
-                  ..insert(
-                    0,
-                    const DropdownMenuItem(
-                      value: null,
-                      child: Text('-'),
-                    ),
+              data: (routes) {
+                routes = routes
+                    .where((route) => route.reference?.path != null)
+                    .toList();
+
+                return DropdownButtonFormField<String?>(
+                  // in case of route is deleted
+                  value:
+                      routes.any((route) => route.reference?.path == routeRef)
+                          ? routeRef
+                          : null,
+                  decoration: const InputDecoration(
+                    labelText: 'Trayek',
                   ),
-                onChanged: (value) {
-                  setState(() {
-                    routeRef = value;
-                  });
-                },
-              ),
+                  items: routes
+                      .map(
+                        (route) => DropdownMenuItem(
+                          value: route.reference!.path,
+                          child: RoutePill(route: route),
+                        ),
+                      )
+                      .toList()
+                    ..insert(
+                      0,
+                      const DropdownMenuItem(
+                        value: null,
+                        child: Text('-'),
+                      ),
+                    ),
+                  onChanged: (value) {
+                    setState(() {
+                      routeRef = value;
+                    });
+                  },
+                );
+              },
               loading: () => const Center(
                 child: CircularProgressIndicator(),
               ),

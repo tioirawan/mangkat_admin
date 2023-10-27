@@ -9,6 +9,24 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 part 'route_model.freezed.dart';
 part 'route_model.g.dart';
 
+enum RouteType {
+  @JsonValue('FIXED')
+  fixed,
+  @JsonValue('TEMPORARY')
+  temporary,
+}
+
+extension RouteTypeX on RouteType {
+  String get name {
+    switch (this) {
+      case RouteType.fixed:
+        return 'SEMENTARA';
+      case RouteType.temporary:
+        return 'TETAP';
+    }
+  }
+}
+
 @freezed
 class RouteModel with _$RouteModel {
   const RouteModel._();
@@ -16,10 +34,20 @@ class RouteModel with _$RouteModel {
   const factory RouteModel({
     String? id,
     String? name,
-    @JsonKey(name: 'start_operation') String? startOperation,
-    @JsonKey(name: 'end_operation') String? endOperation,
+    @JsonKey(
+      name: 'start_operation',
+      toJson: _encodeTimeOfDay,
+      fromJson: _decodeTimeOfDay,
+    )
+    TimeOfDay? startOperation,
+    @JsonKey(
+      name: 'end_operation',
+      toJson: _encodeTimeOfDay,
+      fromJson: _decodeTimeOfDay,
+    )
+    TimeOfDay? endOperation,
     @JsonKey(toJson: _encodeColor, fromJson: _decodeColor) Color? color,
-    String? type,
+    RouteType? type,
     String? description,
     @JsonKey(toJson: _encodeLatLngList, fromJson: _decodeLatLngList)
     List<LatLng>? checkpoints,
@@ -80,6 +108,24 @@ List<Map<String, dynamic>> _encodeLatLngList(List<LatLng>? points) => points!
 
 List<LatLng> _decodeLatLngList(List<dynamic> points) =>
     points.map((e) => LatLng(e['latitude'], e['longitude'])).toList();
+
+// encode time of day
+String _encodeTimeOfDay(TimeOfDay? time) =>
+    '${time!.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
+
+// decode time of day
+TimeOfDay _decodeTimeOfDay(String? time) {
+  if (time == null) {
+    return TimeOfDay.now();
+  }
+
+  final parts = time.split(':');
+
+  return TimeOfDay(
+    hour: int.parse(parts[0]),
+    minute: int.parse(parts[1]),
+  );
+}
 
 // encode hex
 String _encodeColor(Color? color) =>
