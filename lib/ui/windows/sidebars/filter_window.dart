@@ -106,21 +106,26 @@ class _StatisticWindowState extends ConsumerState<FilterWindow> {
                                   runSpacing: 8,
                                   children: [
                                     FilterChip(
-                                      label: const Text(
+                                      label: Text(
                                         'Semua',
                                         style: TextStyle(
-                                          color: Colors.white,
+                                          color: routeFilter.length ==
+                                                  routes.length
+                                              ? Colors.white
+                                              : Theme.of(context)
+                                                  .colorScheme
+                                                  .primary,
                                         ),
                                       ),
                                       selectedColor:
                                           Theme.of(context).colorScheme.primary,
                                       showCheckmark: false,
-                                      selected: routeFilter.isEmpty ||
+                                      selected:
                                           routeFilter.length == routes.length,
                                       onSelected: (selected) {
                                         ref
                                             .read(routeFilterProvider.notifier)
-                                            .selectAll(
+                                            .toggleAll(
                                               routes.map((e) => e.id!).toList(),
                                             );
                                       },

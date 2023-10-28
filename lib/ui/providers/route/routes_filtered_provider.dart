@@ -10,10 +10,6 @@ final routeFilteredProvider = StateProvider<List<RouteModel>>((ref) {
 
   final routes = routesState.asData?.value ?? [];
 
-  if (routeFilter.isEmpty) {
-    return routes;
-  }
-
   final filteredRoutes = routes.where((route) {
     return routeFilter.contains(route.id);
   }).toList();

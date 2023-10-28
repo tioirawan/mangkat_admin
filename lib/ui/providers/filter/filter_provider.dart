@@ -50,8 +50,12 @@ class RouteFilterNotifier extends StateNotifier<List<String>> {
     super.dispose();
   }
 
-  void selectAll(List<String> ids) {
-    state = ids;
+  void toggleAll(List<String> ids) {
+    if (state.length >= ids.length) {
+      state = [];
+    } else {
+      state = ids;
+    }
   }
 
   void add(String id) {
