@@ -42,6 +42,9 @@ class _AddDriverWindowState extends ConsumerState<AddDriverWindow> {
   late final TextEditingController _phoneController = TextEditingController(
     text: widget.driver?.phone,
   );
+  late final TextEditingController _emailController = TextEditingController(
+    text: widget.driver?.email,
+  );
   late final TextEditingController _addressController = TextEditingController(
     text: widget.driver?.address,
   );
@@ -49,6 +52,10 @@ class _AddDriverWindowState extends ConsumerState<AddDriverWindow> {
       TextEditingController(
     text: widget.driver?.drivingLicenseNumber,
   );
+
+  // for creating driver
+  final TextEditingController _passwordController = TextEditingController();
+  bool _isPasswordVisible = false;
 
   late DateTime _drivingLicenseExpiryDate =
       widget.driver?.drivingLicenseExpiryDate ??
@@ -80,13 +87,15 @@ class _AddDriverWindowState extends ConsumerState<AddDriverWindow> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'Tambah Pengemudi',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 24,
-                    fontWeight: FontWeight.w700,
-                    height: 0,
+                const Expanded(
+                  child: Text(
+                    'Tambah Pengemudi',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w700,
+                      height: 0,
+                    ),
                   ),
                 ),
                 Material(
@@ -215,6 +224,52 @@ class _AddDriverWindowState extends ConsumerState<AddDriverWindow> {
             },
           ),
           const SizedBox(height: 16),
+          Opacity(
+            opacity: widget.driver == null ? 1 : 0.5,
+            child: TextFormField(
+              controller: _emailController,
+              readOnly: widget.driver != null,
+              decoration: const InputDecoration(
+                labelText: 'Email',
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Email tidak boleh kosong';
+                }
+
+                return null;
+              },
+            ),
+          ),
+          const SizedBox(height: 16),
+          if (widget.driver == null) ...[
+            TextFormField(
+              controller: _passwordController,
+              obscureText: !_isPasswordVisible,
+              decoration: InputDecoration(
+                labelText: 'Password',
+                suffixIcon: IconButton(
+                  onPressed: () =>
+                      setState(() => _isPasswordVisible = !_isPasswordVisible),
+                  icon: Icon(
+                    _isPasswordVisible
+                        ? Icons.visibility_rounded
+                        : Icons.visibility_off_rounded,
+                  ),
+                ),
+              ),
+              validator: (value) {
+                if (widget.driver != null) return null;
+
+                if (value == null || value.isEmpty) {
+                  return 'Password tidak boleh kosong';
+                }
+
+                return null;
+              },
+            ),
+            const SizedBox(height: 16),
+          ],
           TextFormField(
             controller: _addressController,
             decoration: const InputDecoration(
@@ -323,6 +378,7 @@ class _AddDriverWindowState extends ConsumerState<AddDriverWindow> {
         id: widget.driver?.id,
         name: _nameController.text,
         phone: _phoneController.text,
+        email: _emailController.text,
         address: _addressController.text,
         drivingLicenseNumber: _drivingLicenseNumberController.text,
         drivingLicenseExpiryDate: _drivingLicenseExpiryDate,
@@ -333,7 +389,11 @@ class _AddDriverWindowState extends ConsumerState<AddDriverWindow> {
       if (widget.driver != null) {
         await repository.updateDriver(driver, _image);
       } else {
-        await repository.createDriver(driver, _image);
+        await repository.createDriver(
+          driver,
+          _passwordController.text,
+          _image,
+        );
       }
 
       setState(() => _isSaving = false);

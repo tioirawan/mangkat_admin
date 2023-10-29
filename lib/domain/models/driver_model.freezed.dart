@@ -23,6 +23,7 @@ mixin _$DriverModel {
   String? get id => throw _privateConstructorUsedError;
   String? get name => throw _privateConstructorUsedError;
   String? get phone => throw _privateConstructorUsedError;
+  String? get email => throw _privateConstructorUsedError;
   String? get address => throw _privateConstructorUsedError;
   String? get image => throw _privateConstructorUsedError;
   @JsonKey(name: 'driving_license_number')
@@ -53,6 +54,7 @@ abstract class $DriverModelCopyWith<$Res> {
       {String? id,
       String? name,
       String? phone,
+      String? email,
       String? address,
       String? image,
       @JsonKey(name: 'driving_license_number') String? drivingLicenseNumber,
@@ -80,6 +82,7 @@ class _$DriverModelCopyWithImpl<$Res, $Val extends DriverModel>
     Object? id = freezed,
     Object? name = freezed,
     Object? phone = freezed,
+    Object? email = freezed,
     Object? address = freezed,
     Object? image = freezed,
     Object? drivingLicenseNumber = freezed,
@@ -100,6 +103,10 @@ class _$DriverModelCopyWithImpl<$Res, $Val extends DriverModel>
       phone: freezed == phone
           ? _value.phone
           : phone // ignore: cast_nullable_to_non_nullable
+              as String?,
+      email: freezed == email
+          ? _value.email
+          : email // ignore: cast_nullable_to_non_nullable
               as String?,
       address: freezed == address
           ? _value.address
@@ -145,6 +152,7 @@ abstract class _$$DriverModelImplCopyWith<$Res>
       {String? id,
       String? name,
       String? phone,
+      String? email,
       String? address,
       String? image,
       @JsonKey(name: 'driving_license_number') String? drivingLicenseNumber,
@@ -170,6 +178,7 @@ class __$$DriverModelImplCopyWithImpl<$Res>
     Object? id = freezed,
     Object? name = freezed,
     Object? phone = freezed,
+    Object? email = freezed,
     Object? address = freezed,
     Object? image = freezed,
     Object? drivingLicenseNumber = freezed,
@@ -190,6 +199,10 @@ class __$$DriverModelImplCopyWithImpl<$Res>
       phone: freezed == phone
           ? _value.phone
           : phone // ignore: cast_nullable_to_non_nullable
+              as String?,
+      email: freezed == email
+          ? _value.email
+          : email // ignore: cast_nullable_to_non_nullable
               as String?,
       address: freezed == address
           ? _value.address
@@ -230,6 +243,7 @@ class _$DriverModelImpl extends _DriverModel {
       {this.id,
       this.name,
       this.phone,
+      this.email,
       this.address,
       this.image,
       @JsonKey(name: 'driving_license_number') this.drivingLicenseNumber,
@@ -249,6 +263,8 @@ class _$DriverModelImpl extends _DriverModel {
   final String? name;
   @override
   final String? phone;
+  @override
+  final String? email;
   @override
   final String? address;
   @override
@@ -271,7 +287,7 @@ class _$DriverModelImpl extends _DriverModel {
 
   @override
   String toString() {
-    return 'DriverModel(id: $id, name: $name, phone: $phone, address: $address, image: $image, drivingLicenseNumber: $drivingLicenseNumber, drivingLicenseExpiryDate: $drivingLicenseExpiryDate, createdAt: $createdAt, updatedAt: $updatedAt, reference: $reference)';
+    return 'DriverModel(id: $id, name: $name, phone: $phone, email: $email, address: $address, image: $image, drivingLicenseNumber: $drivingLicenseNumber, drivingLicenseExpiryDate: $drivingLicenseExpiryDate, createdAt: $createdAt, updatedAt: $updatedAt, reference: $reference)';
   }
 
   @override
@@ -282,6 +298,7 @@ class _$DriverModelImpl extends _DriverModel {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.phone, phone) || other.phone == phone) &&
+            (identical(other.email, email) || other.email == email) &&
             (identical(other.address, address) || other.address == address) &&
             (identical(other.image, image) || other.image == image) &&
             (identical(other.drivingLicenseNumber, drivingLicenseNumber) ||
@@ -304,6 +321,7 @@ class _$DriverModelImpl extends _DriverModel {
       id,
       name,
       phone,
+      email,
       address,
       image,
       drivingLicenseNumber,
@@ -331,6 +349,7 @@ abstract class _DriverModel extends DriverModel {
       {final String? id,
       final String? name,
       final String? phone,
+      final String? email,
       final String? address,
       final String? image,
       @JsonKey(name: 'driving_license_number')
@@ -352,6 +371,8 @@ abstract class _DriverModel extends DriverModel {
   String? get name;
   @override
   String? get phone;
+  @override
+  String? get email;
   @override
   String? get address;
   @override

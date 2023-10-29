@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 import '../../domain/models/driver_model.dart';
@@ -9,8 +10,9 @@ import '../../domain/repositories/driver_repository.dart';
 class DriverRepositoryImpl implements DriverRepository {
   final FirebaseFirestore _firestore;
   final FirebaseStorage _storage;
+  final FirebaseAuth _auth;
 
-  DriverRepositoryImpl(this._firestore, this._storage);
+  DriverRepositoryImpl(this._firestore, this._storage, this._auth);
 
   CollectionReference get _drivers => _firestore.collection('drivers');
   Reference get _storageRef => _storage.ref('drivers');
@@ -30,9 +32,17 @@ class DriverRepositoryImpl implements DriverRepository {
   }
 
   @override
-  Future<DriverModel> createDriver(DriverModel driver,
-      [Uint8List? image]) async {
-    final uid = _drivers.doc().id;
+  Future<DriverModel> createDriver(
+    DriverModel driver,
+    String password, [
+    Uint8List? image,
+  ]) async {
+    final credential = await _auth.createUserWithEmailAndPassword(
+      email: driver.email!,
+      password: password,
+    );
+
+    final uid = credential.user!.uid;
 
     if (image != null) {
       // only on web, on mobile, we use putFile

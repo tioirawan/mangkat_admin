@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../domain/models/driver_model.dart';
 import '../../domain/repositories/driver_repository.dart';
+import '../helpers/date_helper.dart';
 import '../providers/common/content_window_controller/content_window_controller.dart';
 import '../providers/common/sections/sidebar_content_controller.dart';
 import '../providers/driver/drivers_provider.dart';
@@ -105,7 +106,7 @@ class _DriverManagerWindowState extends ConsumerState<DriverManagerWindow> {
               Text(driver.phone ?? '-'),
               Text(driver.address ?? '-'),
               Text(driver.drivingLicenseNumber ?? '-'),
-              Text(driver.drivingLicenseExpiryDate?.toString() ?? '-'),
+              Text(DateHelper.formatDate(driver.drivingLicenseExpiryDate)),
               _buildActionButtons(context, driver),
             ],
           ),

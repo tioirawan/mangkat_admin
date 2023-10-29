@@ -10,7 +10,13 @@ abstract class DriverRepository {
   Stream<List<DriverModel>> driversStream();
   Future<List<DriverModel>> getDrivers();
   Future<DriverModel> getDriver(String id);
-  Future<DriverModel> createDriver(DriverModel driver, [Uint8List? image]);
+
+  /// Create a new driver with an account
+  Future<DriverModel> createDriver(
+    DriverModel driver,
+    String password, [
+    Uint8List? image,
+  ]);
   Future<DriverModel> updateDriver(DriverModel driver, [Uint8List? image]);
   Future<void> deleteDriver(DriverModel driver);
 }
@@ -19,5 +25,6 @@ final driverRepositoryProvider = Provider<DriverRepository>(
   (ref) => DriverRepositoryImpl(
     ref.watch(firestoreProvider),
     ref.watch(storageProvider),
+    ref.watch(authProvider),
   ),
 );

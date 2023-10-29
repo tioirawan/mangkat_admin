@@ -14,6 +14,7 @@ class DriverModel with _$DriverModel {
     String? id,
     String? name,
     String? phone,
+    String? email,
     String? address,
     String? image,
     @JsonKey(name: 'driving_license_number') String? drivingLicenseNumber,
