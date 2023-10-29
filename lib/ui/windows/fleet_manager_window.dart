@@ -13,6 +13,7 @@ import '../providers/route/route_provider.dart';
 import '../widgets/route_pill.dart';
 import 'common/table_wrapper.dart';
 import 'sidebars/add_fleet_window.dart';
+import 'sidebars/fleet_detail_window.dart';
 
 class FleetManagerWindow extends ConsumerStatefulWidget {
   const FleetManagerWindow({super.key});
@@ -198,6 +199,27 @@ class _FleetManagerWindowState extends ConsumerState<FleetManagerWindow> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
+        Material(
+          borderRadius: BorderRadius.circular(4),
+          color: colorScheme.tertiary,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(4),
+            onTap: () {
+              ref
+                  .read(rightSidebarContentController.notifier)
+                  .toggle(FleetDetailWindow.name, fleet.id);
+            },
+            child: const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Icon(
+                Icons.remove_red_eye_rounded,
+                size: 16,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
         Material(
           borderRadius: BorderRadius.circular(4),
           color: colorScheme.primary,
