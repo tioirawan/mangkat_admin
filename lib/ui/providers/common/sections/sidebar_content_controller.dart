@@ -8,6 +8,7 @@ import '../../../windows/sidebars/add_driver_window.dart';
 import '../../../windows/sidebars/add_fleet_window.dart';
 import '../../../windows/sidebars/add_route_window.dart';
 import '../../../windows/sidebars/filter_window.dart';
+import '../../../windows/sidebars/fleet_detail_window.dart';
 import '../../../windows/sidebars/statistic_window.dart';
 import '../events/global_events.dart';
 import '../events/global_events_provider.dart';
@@ -51,6 +52,13 @@ final rightSidebarContentController =
       AddDriverWindow.name,
       (Object? arg) => AddDriverWindow(
         driver: arg as DriverModel?,
+      ),
+      false,
+    )
+    ..register(
+      FleetDetailWindow.name,
+      (Object? arg) => FleetDetailWindow(
+        fleetId: arg as String?,
       ),
       false,
     ),

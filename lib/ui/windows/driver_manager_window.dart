@@ -86,6 +86,7 @@ class _DriverManagerWindowState extends ConsumerState<DriverManagerWindow> {
     }
 
     return Table(
+      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
       children: [
         TableRow(
           children: headers

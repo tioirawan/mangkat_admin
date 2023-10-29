@@ -2,10 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../domain/models/driver_model.dart';
 import '../../domain/models/fleet_model.dart';
 import '../../domain/repositories/fleet_repository.dart';
 import '../providers/common/content_window_controller/content_window_controller.dart';
 import '../providers/common/sections/sidebar_content_controller.dart';
+import '../providers/driver/driver_provider.dart';
 import '../providers/fleet/fleets_provider.dart';
 import '../providers/route/route_provider.dart';
 import '../widgets/route_pill.dart';
@@ -57,6 +59,7 @@ class _FleetManagerWindowState extends ConsumerState<FleetManagerWindow> {
       'Nomor Kendaraan',
       'Status',
       'Jenis',
+      'Kapasitas',
       'Catatan',
       'Trayek',
       'Pengemudi',
@@ -83,6 +86,7 @@ class _FleetManagerWindowState extends ConsumerState<FleetManagerWindow> {
     }
 
     return Table(
+      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
       children: [
         TableRow(
           children: headers
@@ -118,8 +122,9 @@ class _FleetManagerWindowState extends ConsumerState<FleetManagerWindow> {
                 ],
               ),
               _buildStatus(fleet),
-              Text(fleet.type?.name ?? ''),
-              Text(fleet.notes ?? ''),
+              Text(fleet.type?.name ?? '-'),
+              Text(fleet.maxCapacity?.toString() ?? '-'),
+              Text(fleet.notes ?? '-'),
               _buildFleetRoute(fleet),
               _buildFleetDriver(fleet),
               _buildActionButtons(context, fleet),
@@ -160,17 +165,22 @@ class _FleetManagerWindowState extends ConsumerState<FleetManagerWindow> {
   }
 
   Widget _buildFleetDriver(FleetModel fleet) {
-    return Text(
-      fleet.driverRef ?? 'Belum ada pengemudi',
-      style: Theme.of(context).textTheme.bodySmall!.copyWith(
-            fontStyle:
-                fleet.driverRef == null ? FontStyle.italic : FontStyle.normal,
-          ),
-    );
+    final driver = ref.watch(driverProvider(fleet.driverId!));
+
+    if (fleet.driverId == null || driver == null) {
+      return Text(
+        'Belum ada pengemudi',
+        style: Theme.of(context).textTheme.bodySmall!.copyWith(
+              fontStyle: FontStyle.italic,
+            ),
+      );
+    }
+
+    return DriverPill(driver: driver);
   }
 
   Widget _buildFleetRoute(FleetModel fleet) {
-    final route = ref.watch(routeProvider(fleet.routeRef));
+    final route = ref.watch(routeProvider(fleet.routeId));
 
     if (route == null) {
       return const Text('-');
@@ -247,6 +257,32 @@ class _FleetManagerWindowState extends ConsumerState<FleetManagerWindow> {
             ),
           ),
         ),
+      ],
+    );
+  }
+}
+
+class DriverPill extends StatelessWidget {
+  final DriverModel driver;
+
+  const DriverPill({
+    super.key,
+    required this.driver,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0),
+          child: CircleAvatar(
+            radius: 12,
+            backgroundImage: CachedNetworkImageProvider(driver.image ?? ''),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Expanded(child: Text(driver.name ?? '')),
       ],
     );
   }

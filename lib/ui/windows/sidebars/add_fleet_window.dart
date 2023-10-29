@@ -43,11 +43,15 @@ class _AddFleetWindowState extends ConsumerState<AddFleetWindow> {
   late final TextEditingController _notesController = TextEditingController(
     text: widget.fleet?.notes,
   );
+  late final TextEditingController _maxCapacityController =
+      TextEditingController(
+    text: widget.fleet?.maxCapacity?.toString() ?? '0',
+  );
 
   late FleetStatus _status = widget.fleet?.status ?? FleetStatus.idle;
   late FleetType _type = widget.fleet?.type ?? FleetType.miniBus;
 
-  late String? routeRef = widget.fleet?.routeRef;
+  late String? routeId = widget.fleet?.routeId;
 
   Uint8List? _image;
 
@@ -224,6 +228,23 @@ class _AddFleetWindowState extends ConsumerState<AddFleetWindow> {
           ),
           const SizedBox(height: 16),
           TextFormField(
+            controller: _maxCapacityController,
+            decoration: const InputDecoration(
+              labelText: 'Kapasitas Maksimal',
+            ),
+            keyboardType: TextInputType.number,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Kapasitas Maksimal tidak boleh kosong';
+              } else if (int.tryParse(value) == null) {
+                return 'Kapasitas Maksimal harus berupa angka';
+              }
+
+              return null;
+            },
+          ),
+          const SizedBox(height: 16),
+          TextFormField(
             controller: _notesController,
             decoration: const InputDecoration(
               labelText: 'Catatan',
@@ -267,23 +288,20 @@ class _AddFleetWindowState extends ConsumerState<AddFleetWindow> {
 
             return routesState.when(
               data: (routes) {
-                routes = routes
-                    .where((route) => route.reference?.path != null)
-                    .toList();
+                routes = routes.where((route) => route.id != null).toList();
 
                 return DropdownButtonFormField<String?>(
                   // in case of route is deleted
-                  value:
-                      routes.any((route) => route.reference?.path == routeRef)
-                          ? routeRef
-                          : null,
+                  value: routes.any((route) => route.id == routeId)
+                      ? routeId
+                      : null,
                   decoration: const InputDecoration(
                     labelText: 'Trayek',
                   ),
                   items: routes
                       .map(
                         (route) => DropdownMenuItem(
-                          value: route.reference!.path,
+                          value: route.id,
                           child: RoutePill(route: route),
                         ),
                       )
@@ -297,7 +315,7 @@ class _AddFleetWindowState extends ConsumerState<AddFleetWindow> {
                     ),
                   onChanged: (value) {
                     setState(() {
-                      routeRef = value;
+                      routeId = value;
                     });
                   },
                 );
@@ -360,7 +378,8 @@ class _AddFleetWindowState extends ConsumerState<AddFleetWindow> {
         status: _status,
         type: _type,
         notes: _notesController.text,
-        routeRef: routeRef,
+        routeId: routeId,
+        maxCapacity: int.tryParse(_maxCapacityController.text) ?? 0,
       );
 
       final repository = ref.read(fleetRepositoryProvider);

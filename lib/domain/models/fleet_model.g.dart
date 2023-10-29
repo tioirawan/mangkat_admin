@@ -14,8 +14,9 @@ _$FleetModelImpl _$$FleetModelImplFromJson(Map<String, dynamic> json) =>
       status: $enumDecodeNullable(_$FleetStatusEnumMap, json['status']),
       type: $enumDecodeNullable(_$FleetTypeEnumMap, json['type']),
       notes: json['notes'] as String?,
-      driverRef: json['driverRef'] as String?,
-      routeRef: json['routeRef'] as String?,
+      maxCapacity: json['max_capacity'] as int?,
+      driverId: json['driver_id'] as String?,
+      routeId: json['route_id'] as String?,
       createdAt: json['created_at'] == null
           ? null
           : DateTime.parse(json['created_at'] as String),
@@ -32,8 +33,9 @@ Map<String, dynamic> _$$FleetModelImplToJson(_$FleetModelImpl instance) =>
       'status': _$FleetStatusEnumMap[instance.status],
       'type': _$FleetTypeEnumMap[instance.type],
       'notes': instance.notes,
-      'driverRef': instance.driverRef,
-      'routeRef': instance.routeRef,
+      'max_capacity': instance.maxCapacity,
+      'driver_id': instance.driverId,
+      'route_id': instance.routeId,
       'created_at': instance.createdAt?.toIso8601String(),
       'updated_at': instance.updatedAt?.toIso8601String(),
     };

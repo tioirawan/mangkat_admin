@@ -3,12 +3,16 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../domain/models/fleet_position_model.dart';
 import '../domain/models/route_model.dart';
 import 'providers/common/content_window_controller/content_window_controller.dart';
 import 'providers/common/map_controller/map_provider.dart';
+import 'providers/common/sections/sidebar_content_controller.dart';
+import 'providers/fleet/fleets_position_provider.dart';
 import 'providers/route/edited_route_provider.dart';
 import 'providers/route/focused_route_provider.dart';
 import 'providers/route/routes_filtered_provider.dart';
+import 'windows/sidebars/fleet_detail_window.dart';
 
 class MapView extends ConsumerStatefulWidget {
   const MapView({super.key});
@@ -24,13 +28,39 @@ class MapViewState extends ConsumerState<MapView> {
   );
 
   @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadFleetIcon();
+    });
+  }
+
+  BitmapDescriptor _fleetIcon = BitmapDescriptor.defaultMarker;
+
+  Future<void> _loadFleetIcon() async {
+    _fleetIcon = await BitmapDescriptor.fromAssetImage(
+      const ImageConfiguration(
+        size: Size.square(32),
+      ),
+      'assets/images/fleet_position_marker.png',
+    );
+
+    setState(() {});
+  }
+
+  @override
   Widget build(BuildContext context) {
     final state = ref.watch(mapControllerProvider);
     final routes = ref.watch(routeFilteredProvider);
+    final fleetsPosition = ref.watch(fleetsPositionProvider);
     final focusedRoute = ref.watch(focusedRouteProvider);
     final editedRoute = ref.watch(editedRouteProvider);
 
+    print('fleetPosition: ${fleetsPosition.asData?.value}');
+
     Set<Polyline> polylines = state.polylines;
+    Set<Marker> markers = state.markers;
 
     if (!state.cleanMode) {
       for (final RouteModel route in routes) {
@@ -68,6 +98,35 @@ class MapViewState extends ConsumerState<MapView> {
           polyline,
         };
       }
+
+      for (MapEntry<String, FleetPositionModel> entry
+          in fleetsPosition.asData?.value.entries ?? []) {
+        final fleetPosition = entry.value;
+
+        final marker = Marker(
+          markerId: MarkerId('fleet_${entry.key}'),
+          position: LatLng(
+            fleetPosition.latitude ?? 0,
+            fleetPosition.longitude ?? 0,
+          ),
+          icon: _fleetIcon,
+          rotation: 90,
+          anchor: const Offset(0.5, 0.5),
+          zIndex: 2,
+          onTap: () {
+            // ref.read(focusedRouteProvider.notifier).state = null;
+
+            ref
+                .read(rightSidebarContentController.notifier)
+                .open(FleetDetailWindow.name, entry.key);
+          },
+        );
+
+        markers = {
+          ...markers,
+          marker,
+        };
+      }
     }
 
     return AnimatedContainer(
@@ -79,7 +138,7 @@ class MapViewState extends ConsumerState<MapView> {
         trafficEnabled: false,
         cloudMapId: 'c92510ddc71ac5fc',
         initialCameraPosition: _initialCamera,
-        markers: state.markers,
+        markers: markers,
         polylines: polylines,
         onTap: (LatLng latLng) {
           // if (editedRoute == null && focusedRoute != null) {

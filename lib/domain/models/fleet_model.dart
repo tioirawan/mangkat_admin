@@ -77,8 +77,9 @@ class FleetModel with _$FleetModel {
     FleetStatus? status,
     FleetType? type,
     String? notes,
-    String? driverRef,
-    String? routeRef,
+    @JsonKey(name: 'max_capacity') int? maxCapacity,
+    @JsonKey(name: 'driver_id') String? driverId,
+    @JsonKey(name: 'route_id') String? routeId,
     // timestamp
     @JsonKey(name: 'created_at') DateTime? createdAt,
     @JsonKey(name: 'updated_at') DateTime? updatedAt,

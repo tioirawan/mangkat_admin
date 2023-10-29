@@ -26,8 +26,12 @@ mixin _$FleetModel {
   FleetStatus? get status => throw _privateConstructorUsedError;
   FleetType? get type => throw _privateConstructorUsedError;
   String? get notes => throw _privateConstructorUsedError;
-  String? get driverRef => throw _privateConstructorUsedError;
-  String? get routeRef => throw _privateConstructorUsedError; // timestamp
+  @JsonKey(name: 'max_capacity')
+  int? get maxCapacity => throw _privateConstructorUsedError;
+  @JsonKey(name: 'driver_id')
+  String? get driverId => throw _privateConstructorUsedError;
+  @JsonKey(name: 'route_id')
+  String? get routeId => throw _privateConstructorUsedError; // timestamp
   @JsonKey(name: 'created_at')
   DateTime? get createdAt => throw _privateConstructorUsedError;
   @JsonKey(name: 'updated_at')
@@ -55,8 +59,9 @@ abstract class $FleetModelCopyWith<$Res> {
       FleetStatus? status,
       FleetType? type,
       String? notes,
-      String? driverRef,
-      String? routeRef,
+      @JsonKey(name: 'max_capacity') int? maxCapacity,
+      @JsonKey(name: 'driver_id') String? driverId,
+      @JsonKey(name: 'route_id') String? routeId,
       @JsonKey(name: 'created_at') DateTime? createdAt,
       @JsonKey(name: 'updated_at') DateTime? updatedAt,
       @JsonKey(includeFromJson: false, includeToJson: false)
@@ -82,8 +87,9 @@ class _$FleetModelCopyWithImpl<$Res, $Val extends FleetModel>
     Object? status = freezed,
     Object? type = freezed,
     Object? notes = freezed,
-    Object? driverRef = freezed,
-    Object? routeRef = freezed,
+    Object? maxCapacity = freezed,
+    Object? driverId = freezed,
+    Object? routeId = freezed,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
     Object? reference = freezed,
@@ -113,13 +119,17 @@ class _$FleetModelCopyWithImpl<$Res, $Val extends FleetModel>
           ? _value.notes
           : notes // ignore: cast_nullable_to_non_nullable
               as String?,
-      driverRef: freezed == driverRef
-          ? _value.driverRef
-          : driverRef // ignore: cast_nullable_to_non_nullable
+      maxCapacity: freezed == maxCapacity
+          ? _value.maxCapacity
+          : maxCapacity // ignore: cast_nullable_to_non_nullable
+              as int?,
+      driverId: freezed == driverId
+          ? _value.driverId
+          : driverId // ignore: cast_nullable_to_non_nullable
               as String?,
-      routeRef: freezed == routeRef
-          ? _value.routeRef
-          : routeRef // ignore: cast_nullable_to_non_nullable
+      routeId: freezed == routeId
+          ? _value.routeId
+          : routeId // ignore: cast_nullable_to_non_nullable
               as String?,
       createdAt: freezed == createdAt
           ? _value.createdAt
@@ -152,8 +162,9 @@ abstract class _$$FleetModelImplCopyWith<$Res>
       FleetStatus? status,
       FleetType? type,
       String? notes,
-      String? driverRef,
-      String? routeRef,
+      @JsonKey(name: 'max_capacity') int? maxCapacity,
+      @JsonKey(name: 'driver_id') String? driverId,
+      @JsonKey(name: 'route_id') String? routeId,
       @JsonKey(name: 'created_at') DateTime? createdAt,
       @JsonKey(name: 'updated_at') DateTime? updatedAt,
       @JsonKey(includeFromJson: false, includeToJson: false)
@@ -177,8 +188,9 @@ class __$$FleetModelImplCopyWithImpl<$Res>
     Object? status = freezed,
     Object? type = freezed,
     Object? notes = freezed,
-    Object? driverRef = freezed,
-    Object? routeRef = freezed,
+    Object? maxCapacity = freezed,
+    Object? driverId = freezed,
+    Object? routeId = freezed,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
     Object? reference = freezed,
@@ -208,13 +220,17 @@ class __$$FleetModelImplCopyWithImpl<$Res>
           ? _value.notes
           : notes // ignore: cast_nullable_to_non_nullable
               as String?,
-      driverRef: freezed == driverRef
-          ? _value.driverRef
-          : driverRef // ignore: cast_nullable_to_non_nullable
+      maxCapacity: freezed == maxCapacity
+          ? _value.maxCapacity
+          : maxCapacity // ignore: cast_nullable_to_non_nullable
+              as int?,
+      driverId: freezed == driverId
+          ? _value.driverId
+          : driverId // ignore: cast_nullable_to_non_nullable
               as String?,
-      routeRef: freezed == routeRef
-          ? _value.routeRef
-          : routeRef // ignore: cast_nullable_to_non_nullable
+      routeId: freezed == routeId
+          ? _value.routeId
+          : routeId // ignore: cast_nullable_to_non_nullable
               as String?,
       createdAt: freezed == createdAt
           ? _value.createdAt
@@ -242,8 +258,9 @@ class _$FleetModelImpl extends _FleetModel {
       this.status,
       this.type,
       this.notes,
-      this.driverRef,
-      this.routeRef,
+      @JsonKey(name: 'max_capacity') this.maxCapacity,
+      @JsonKey(name: 'driver_id') this.driverId,
+      @JsonKey(name: 'route_id') this.routeId,
       @JsonKey(name: 'created_at') this.createdAt,
       @JsonKey(name: 'updated_at') this.updatedAt,
       @JsonKey(includeFromJson: false, includeToJson: false) this.reference})
@@ -265,9 +282,14 @@ class _$FleetModelImpl extends _FleetModel {
   @override
   final String? notes;
   @override
-  final String? driverRef;
+  @JsonKey(name: 'max_capacity')
+  final int? maxCapacity;
   @override
-  final String? routeRef;
+  @JsonKey(name: 'driver_id')
+  final String? driverId;
+  @override
+  @JsonKey(name: 'route_id')
+  final String? routeId;
 // timestamp
   @override
   @JsonKey(name: 'created_at')
@@ -281,7 +303,7 @@ class _$FleetModelImpl extends _FleetModel {
 
   @override
   String toString() {
-    return 'FleetModel(id: $id, vehicleNumber: $vehicleNumber, image: $image, status: $status, type: $type, notes: $notes, driverRef: $driverRef, routeRef: $routeRef, createdAt: $createdAt, updatedAt: $updatedAt, reference: $reference)';
+    return 'FleetModel(id: $id, vehicleNumber: $vehicleNumber, image: $image, status: $status, type: $type, notes: $notes, maxCapacity: $maxCapacity, driverId: $driverId, routeId: $routeId, createdAt: $createdAt, updatedAt: $updatedAt, reference: $reference)';
   }
 
   @override
@@ -296,10 +318,11 @@ class _$FleetModelImpl extends _FleetModel {
             (identical(other.status, status) || other.status == status) &&
             (identical(other.type, type) || other.type == type) &&
             (identical(other.notes, notes) || other.notes == notes) &&
-            (identical(other.driverRef, driverRef) ||
-                other.driverRef == driverRef) &&
-            (identical(other.routeRef, routeRef) ||
-                other.routeRef == routeRef) &&
+            (identical(other.maxCapacity, maxCapacity) ||
+                other.maxCapacity == maxCapacity) &&
+            (identical(other.driverId, driverId) ||
+                other.driverId == driverId) &&
+            (identical(other.routeId, routeId) || other.routeId == routeId) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
@@ -310,8 +333,20 @@ class _$FleetModelImpl extends _FleetModel {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, vehicleNumber, image, status,
-      type, notes, driverRef, routeRef, createdAt, updatedAt, reference);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      vehicleNumber,
+      image,
+      status,
+      type,
+      notes,
+      maxCapacity,
+      driverId,
+      routeId,
+      createdAt,
+      updatedAt,
+      reference);
 
   @JsonKey(ignore: true)
   @override
@@ -335,8 +370,9 @@ abstract class _FleetModel extends FleetModel {
       final FleetStatus? status,
       final FleetType? type,
       final String? notes,
-      final String? driverRef,
-      final String? routeRef,
+      @JsonKey(name: 'max_capacity') final int? maxCapacity,
+      @JsonKey(name: 'driver_id') final String? driverId,
+      @JsonKey(name: 'route_id') final String? routeId,
       @JsonKey(name: 'created_at') final DateTime? createdAt,
       @JsonKey(name: 'updated_at') final DateTime? updatedAt,
       @JsonKey(includeFromJson: false, includeToJson: false)
@@ -359,9 +395,14 @@ abstract class _FleetModel extends FleetModel {
   @override
   String? get notes;
   @override
-  String? get driverRef;
+  @JsonKey(name: 'max_capacity')
+  int? get maxCapacity;
   @override
-  String? get routeRef;
+  @JsonKey(name: 'driver_id')
+  String? get driverId;
+  @override
+  @JsonKey(name: 'route_id')
+  String? get routeId;
   @override // timestamp
   @JsonKey(name: 'created_at')
   DateTime? get createdAt;
