@@ -9,6 +9,7 @@ import 'providers/common/content_window_controller/content_window_controller.dar
 import 'providers/common/map_controller/map_provider.dart';
 import 'providers/common/sections/sidebar_content_controller.dart';
 import 'providers/fleet/fleets_position_provider.dart';
+import 'providers/fleet/focused_fleet_provider.dart';
 import 'providers/route/edited_route_provider.dart';
 import 'providers/route/focused_route_provider.dart';
 import 'providers/route/routes_filtered_provider.dart';
@@ -41,7 +42,7 @@ class MapViewState extends ConsumerState<MapView> {
   Future<void> _loadFleetIcon() async {
     _fleetIcon = await BitmapDescriptor.fromAssetImage(
       const ImageConfiguration(
-        size: Size.square(32),
+        size: Size.square(28),
       ),
       'assets/images/fleet_position_marker.png',
     );
@@ -55,12 +56,39 @@ class MapViewState extends ConsumerState<MapView> {
     final routes = ref.watch(routeFilteredProvider);
     final fleetsPosition = ref.watch(fleetsPositionProvider);
     final focusedRoute = ref.watch(focusedRouteProvider);
+    final focusedFleet = ref.watch(focusedFleetProvider);
     final editedRoute = ref.watch(editedRouteProvider);
 
     print('fleetPosition: ${fleetsPosition.asData?.value}');
 
     Set<Polyline> polylines = state.polylines;
     Set<Marker> markers = state.markers;
+
+    ref.listen(fleetsPositionProvider, (_, state) {
+      final positions = state.value ?? {};
+
+      if (focusedFleet == null) return;
+
+      FleetPositionModel? position;
+
+      for (final fleetId in positions.keys) {
+        if (fleetId == focusedFleet.id) {
+          position = positions[fleetId];
+          break;
+        }
+      }
+
+      if (position == null) return;
+
+      ref.read(mapControllerProvider.notifier).animateCamera(
+            CameraUpdate.newLatLng(
+              LatLng(
+                position.latitude ?? 0,
+                position.longitude ?? 0,
+              ),
+            ),
+          );
+    });
 
     if (!state.cleanMode) {
       for (final RouteModel route in routes) {
@@ -110,7 +138,10 @@ class MapViewState extends ConsumerState<MapView> {
             fleetPosition.longitude ?? 0,
           ),
           icon: _fleetIcon,
-          rotation: 90,
+          // icon: BitmapDescriptor.defaultMarkerWithHue(
+          //   BitmapDescriptor.hueAzure,
+          // ),
+          // rotation: 90,
           anchor: const Offset(0.5, 0.5),
           zIndex: 2,
           onTap: () {

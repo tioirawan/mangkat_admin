@@ -1,8 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../domain/models/driver_model.dart';
 import '../../domain/models/fleet_model.dart';
 import '../../domain/repositories/fleet_repository.dart';
 import '../providers/common/content_window_controller/content_window_controller.dart';
@@ -10,6 +8,8 @@ import '../providers/common/sections/sidebar_content_controller.dart';
 import '../providers/driver/driver_provider.dart';
 import '../providers/fleet/fleets_provider.dart';
 import '../providers/route/route_provider.dart';
+import '../widgets/driver_pill.dart';
+import '../widgets/fleet_pill.dart';
 import '../widgets/route_pill.dart';
 import 'common/table_wrapper.dart';
 import 'sidebars/add_fleet_window.dart';
@@ -102,26 +102,7 @@ class _FleetManagerWindowState extends ConsumerState<FleetManagerWindow> {
         for (final fleet in fleets)
           TableRow(
             children: [
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4.0),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(4),
-                      child: CachedNetworkImage(
-                        imageUrl: fleet.image ?? '',
-                        width: 38,
-                        height: 38,
-                        fit: BoxFit.cover,
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.directions_bus_rounded),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(child: Text(fleet.vehicleNumber ?? '')),
-                ],
-              ),
+              FleetPill(fleet: fleet),
               _buildStatus(fleet),
               Text(fleet.type?.name ?? '-'),
               Text(fleet.maxCapacity?.toString() ?? '-'),
@@ -279,32 +260,6 @@ class _FleetManagerWindowState extends ConsumerState<FleetManagerWindow> {
             ),
           ),
         ),
-      ],
-    );
-  }
-}
-
-class DriverPill extends StatelessWidget {
-  final DriverModel driver;
-
-  const DriverPill({
-    super.key,
-    required this.driver,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4.0),
-          child: CircleAvatar(
-            radius: 12,
-            backgroundImage: CachedNetworkImageProvider(driver.image ?? ''),
-          ),
-        ),
-        const SizedBox(width: 8),
-        Expanded(child: Text(driver.name ?? '')),
       ],
     );
   }

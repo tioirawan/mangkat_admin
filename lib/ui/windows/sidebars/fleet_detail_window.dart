@@ -2,18 +2,21 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../../domain/models/driver_chat_model.dart';
 import '../../../domain/models/driver_model.dart';
 import '../../../domain/models/fleet_position_model.dart';
 import '../../helpers/date_helper.dart';
 import '../../providers/auth/current_user_provider.dart';
+import '../../providers/common/map_controller/map_provider.dart';
 import '../../providers/common/sections/sidebar_content_controller.dart';
 import '../../providers/driver/driver_chat_provider.dart';
 import '../../providers/driver/driver_provider.dart';
 import '../../providers/fleet/fleet_occupancy_provider.dart';
 import '../../providers/fleet/fleet_position_provider.dart';
 import '../../providers/fleet/fleet_provider.dart';
+import '../../providers/fleet/focused_fleet_provider.dart';
 import '../../providers/route/route_provider.dart';
 import '../../themes/app_theme.dart';
 import '../../widgets/route_pill.dart';
@@ -42,6 +45,8 @@ class _FleetDetailWindowState extends ConsumerState<FleetDetailWindow> {
     final route = ref.watch(routeProvider(fleet?.routeId));
     final driver = ref.watch(driverProvider(fleet?.driverId));
 
+    final focusedFleet = ref.watch(focusedFleetProvider);
+
     return Container(
       decoration: AppTheme.windowCardDecoration,
       child: Column(
@@ -52,23 +57,71 @@ class _FleetDetailWindowState extends ConsumerState<FleetDetailWindow> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    Text(
-                      fleet?.vehicleNumber ?? '-',
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 24,
-                        fontWeight: FontWeight.w700,
-                        height: 0,
+                Expanded(
+                  child: Row(
+                    children: [
+                      Text(
+                        fleet?.vehicleNumber ?? '-',
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 24,
+                          fontWeight: FontWeight.w700,
+                          height: 0,
+                        ),
+                      ),
+                      if (route != null) ...[
+                        const SizedBox(width: 16),
+                        RoutePill(route: route),
+                      ],
+                    ],
+                  ),
+                ),
+                Material(
+                  shape: const CircleBorder(),
+                  color: focusedFleet?.id == fleet?.id
+                      ? Theme.of(context)
+                          .colorScheme
+                          .onBackground
+                          .withOpacity(0.1)
+                      : Theme.of(context).colorScheme.primary,
+                  child: InkWell(
+                    onTap: () {
+                      if (focusedFleet?.id == fleet?.id) {
+                        ref.read(focusedFleetProvider.notifier).state = null;
+                        return;
+                      }
+
+                      final position =
+                          ref.watch(fleetPositionProvider(fleet?.id));
+
+                      ref.read(focusedFleetProvider.notifier).state = fleet;
+
+                      if (position != null) {
+                        ref.read(mapControllerProvider.notifier).animateCamera(
+                              CameraUpdate.newLatLngZoom(
+                                LatLng(
+                                  position.latitude ?? 0,
+                                  position.longitude ?? 0,
+                                ),
+                                16,
+                              ),
+                            );
+                      }
+                    },
+                    customBorder: const CircleBorder(),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Icon(
+                        focusedFleet?.id == fleet?.id
+                            ? Icons.visibility_off_rounded
+                            : Icons.visibility_rounded,
+                        color: Theme.of(context).colorScheme.onError,
+                        size: 18,
                       ),
                     ),
-                    if (route != null) ...[
-                      const SizedBox(width: 16),
-                      RoutePill(route: route),
-                    ],
-                  ],
+                  ),
                 ),
+                const SizedBox(width: 8),
                 Material(
                   shape: const CircleBorder(),
                   color: Theme.of(context).colorScheme.error,
@@ -152,7 +205,7 @@ class _FleetDetailWindowState extends ConsumerState<FleetDetailWindow> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '${fleetPosition?.speed ?? '-'} km/h',
+          '${fleetPosition?.speed?.toStringAsFixed(0) ?? '-'} km/h',
           style: Theme.of(context).textTheme.titleSmall!.copyWith(
                 fontWeight: FontWeight.w700,
                 color: Theme.of(context).colorScheme.primary,
@@ -160,7 +213,7 @@ class _FleetDetailWindowState extends ConsumerState<FleetDetailWindow> {
         ),
         const SizedBox(height: 8),
         TweenAnimationBuilder(
-          duration: 1.seconds,
+          duration: 5.seconds,
           curve: Curves.easeInOut,
           tween: Tween<double>(
             begin: 0,
