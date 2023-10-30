@@ -166,7 +166,7 @@ class _FleetManagerWindowState extends ConsumerState<FleetManagerWindow> {
   }
 
   Widget _buildFleetDriver(FleetModel fleet) {
-    final driver = ref.watch(driverProvider(fleet.driverId!));
+    final driver = ref.watch(driverProvider(fleet.driverId));
 
     if (fleet.driverId == null || driver == null) {
       return Text(
