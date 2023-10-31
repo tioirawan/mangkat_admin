@@ -24,7 +24,7 @@ abstract class DriverRepository {
 final driverRepositoryProvider = Provider<DriverRepository>(
   (ref) => DriverRepositoryImpl(
     ref.watch(firestoreProvider),
+    ref.watch(functionsProvider),
     ref.watch(storageProvider),
-    ref.watch(authProvider),
   ),
 );

@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 import '../../domain/models/driver_model.dart';
@@ -9,10 +9,14 @@ import '../../domain/repositories/driver_repository.dart';
 
 class DriverRepositoryImpl implements DriverRepository {
   final FirebaseFirestore _firestore;
+  final FirebaseFunctions _functions;
   final FirebaseStorage _storage;
-  final FirebaseAuth _auth;
 
-  DriverRepositoryImpl(this._firestore, this._storage, this._auth);
+  DriverRepositoryImpl(
+    this._firestore,
+    this._functions,
+    this._storage,
+  );
 
   CollectionReference get _drivers => _firestore.collection('drivers');
   Reference get _storageRef => _storage.ref('drivers');
@@ -37,28 +41,38 @@ class DriverRepositoryImpl implements DriverRepository {
     String password, [
     Uint8List? image,
   ]) async {
-    final credential = await _auth.createUserWithEmailAndPassword(
-      email: driver.email!,
-      password: password,
-    );
+    try {
+      final callable = _functions.httpsCallable('createUser');
+      final response = await callable.call({
+        'email': driver.email,
+        'password': password,
+      });
 
-    final uid = credential.user!.uid;
+      final uid = response.data['uid'];
 
-    if (image != null) {
-      // only on web, on mobile, we use putFile
-      final snapshot = await _storageRef.child('$uid.png').putData(image);
-      final downloadUrl = await snapshot.ref.getDownloadURL();
-      driver = driver.copyWith(image: downloadUrl);
+      if (uid == null) {
+        throw Exception(response.data ?? 'Error creating user');
+      }
+
+      if (image != null) {
+        // only on web, on mobile, we use putFile
+        final snapshot = await _storageRef.child('$uid.png').putData(image);
+        final downloadUrl = await snapshot.ref.getDownloadURL();
+        driver = driver.copyWith(image: downloadUrl);
+      }
+
+      final doc = _drivers.doc(uid);
+
+      await doc.set(driver.copyWith(createdAt: DateTime.now()).toDocument());
+
+      return driver.copyWith(
+        id: driver.id,
+        reference: doc,
+      );
+    } on Exception catch (e) {
+      print(e);
+      rethrow;
     }
-
-    final doc = _drivers.doc(uid);
-
-    await doc.set(driver.copyWith(createdAt: DateTime.now()).toDocument());
-
-    return driver.copyWith(
-      id: driver.id,
-      reference: doc,
-    );
   }
 
   @override
@@ -69,6 +83,12 @@ class DriverRepositoryImpl implements DriverRepository {
     }
 
     await _drivers.doc(driver.id).delete();
+
+    // delete account
+    final callable = _functions.httpsCallable('deleteUser');
+    await callable.call({
+      'uid': driver.id,
+    });
   }
 
   @override
