@@ -16,6 +16,7 @@ class App extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
+      title: 'Mangkat Admin',
       theme: AppTheme.theme(),
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,

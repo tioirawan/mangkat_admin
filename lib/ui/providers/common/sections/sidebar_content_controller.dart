@@ -58,9 +58,9 @@ final rightSidebarContentController =
     ..register(
       FleetDetailWindow.name,
       (Object? arg) => FleetDetailWindow(
-        fleetId: (arg as String?) ?? 'MIiWzYV9NpFi80rFTKvY',
+        fleetId: arg as String?,
       ),
-      true,
+      false,
     ),
 );
 
