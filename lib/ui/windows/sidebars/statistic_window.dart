@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_polyline_no_xmlhttperror/flutter_polyline_no_xmlhttperror.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import '../../providers/common/map_controller/map_provider.dart';
 import '../../themes/app_theme.dart';
 
 class StatisticWindow extends ConsumerStatefulWidget {
@@ -129,61 +127,61 @@ class _StatisticWindowState extends ConsumerState<StatisticWindow> {
   };
 
   void _generatePolyline() async {
-    final controller = ref.read(mapControllerProvider.notifier);
+    // final controller = ref.read(mapControllerProvider.notifier);
 
-    const googleAPiKey = 'AIzaSyDbjkQSHEPm37DbLuICyGxXF0FjzkPxhXA';
-    PolylinePoints polylinePoints = PolylinePoints(googleAPiKey);
+    // const googleAPiKey = 'AIzaSyDbjkQSHEPm37DbLuICyGxXF0FjzkPxhXA';
+    // PolylinePoints polylinePoints = PolylinePoints(googleAPiKey);
 
-    for (final MapEntry<Color, List<LatLng>> entry in routes.entries) {
-      final color = entry.key;
-      final checkpoints = entry.value;
-      final routeName = color.toString();
+    // for (final MapEntry<Color, List<LatLng>> entry in routes.entries) {
+    //   final color = entry.key;
+    //   final checkpoints = entry.value;
+    //   final routeName = color.toString();
 
-      // calculate polyline for each route between checkpoints
-      Set<LatLng> results = {};
+    //   // calculate polyline for each route between checkpoints
+    //   Set<LatLng> results = {};
 
-      for (int i = 0; i < checkpoints.length - 1; i++) {
-        List<LatLng> result = await polylinePoints.getRouteBetweenCoordinates(
-          checkpoints[i],
-          checkpoints[i + 1],
-        );
+    //   for (int i = 0; i < checkpoints.length - 1; i++) {
+    //     List<LatLng> result = await polylinePoints.getRouteBetweenCoordinates(
+    //       checkpoints[i],
+    //       checkpoints[i + 1],
+    //     );
 
-        results.addAll(result);
+    //     results.addAll(result);
 
-        controller.addMarker(
-          Marker(
-            markerId: MarkerId('${routeName}_$i'),
-            position: checkpoints[i],
-            infoWindow: InfoWindow(
-              title: 'Checkpoint $i',
-            ),
-            icon: BitmapDescriptor.defaultMarker,
-          ),
-        );
+    //     controller.addMarker(
+    //       '${routeName}_$i',
+    //       Marker(
+    //         position: checkpoints[i],
+    //         infoWindow: InfoWindow(
+    //           title: 'Checkpoint $i',
+    //         ),
+    //         icon: BitmapDescriptor.defaultMarker,
+    //       ),
+    //     );
 
-        controller.addPolyline(Polyline(
-          polylineId: PolylineId('trayek_$routeName'),
-          points: results.toList(),
-          color: color,
-          width: 5,
-        ));
-      }
-    }
+    //     controller.addPolyline(Polyline(
+    //       polylineId: PolylineId('trayek_$routeName'),
+    //       points: results.toList(),
+    //       color: color,
+    //       width: 5,
+    //     ));
+    //   }
+    // }
   }
 
   void _clearPolyline() {
-    final controller = ref.read(mapControllerProvider.notifier);
+    // final controller = ref.read(mapControllerProvider.notifier);
 
-    for (final MapEntry<Color, List<LatLng>> entry in routes.entries) {
-      final color = entry.key;
-      final checkpoints = entry.value;
-      final routeName = color.toString();
+    // for (final MapEntry<Color, List<LatLng>> entry in routes.entries) {
+    //   final color = entry.key;
+    //   final checkpoints = entry.value;
+    //   final routeName = color.toString();
 
-      for (int i = 0; i < checkpoints.length - 1; i++) {
-        controller.removeMarker(MarkerId('${routeName}_$i'));
-      }
+    //   for (int i = 0; i < checkpoints.length - 1; i++) {
+    //     controller.removeMarker(MarkerId('${routeName}_$i'));
+    //   }
 
-      controller.removePolyline(PolylineId('trayek_$routeName'));
-    }
+    //   controller.removePolyline(PolylineId('trayek_$routeName'));
+    // }
   }
 }

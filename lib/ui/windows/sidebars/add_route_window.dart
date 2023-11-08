@@ -3,13 +3,13 @@ import 'dart:async';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:latlong2/latlong.dart';
 
 import '../../../domain/models/route_model.dart';
 import '../../../domain/repositories/route_repository.dart';
 import '../../../domain/services/route_service.dart';
-import '../../helpers/map_helper.dart';
 import '../../providers/common/content_window_controller/content_window_controller.dart';
 import '../../providers/common/events/global_events.dart';
 import '../../providers/common/events/global_events_provider.dart';
@@ -138,17 +138,17 @@ class _AddRouteWindowState extends ConsumerState<AddRouteWindow> {
         setState(() {});
         _redrawRoutes();
 
-        mapController.removeMarker(MarkerId(
+        mapController.removeMarker(
           'new_route/checkpoint_${checkpoint.latitude}_${checkpoint.longitude}',
-        ));
+        );
 
         return;
       }
     }
 
-    mapController.removeMarker(MarkerId(
+    mapController.removeMarker(
       'new_route/checkpoint_${checkpoint.latitude}_${checkpoint.longitude}',
-    ));
+    );
 
     // check if there is a route between the checkpoint
     LatLng? prefLat;
@@ -230,15 +230,17 @@ class _AddRouteWindowState extends ConsumerState<AddRouteWindow> {
     // draw markers
     for (final checkpoint in _checkpoints) {
       mapController.addMarker(
+        'new_route/checkpoint_${checkpoint.latitude}_${checkpoint.longitude}',
         Marker(
-          markerId: MarkerId(
-            'new_route/checkpoint_${checkpoint.latitude}_${checkpoint.longitude}',
+          point: checkpoint,
+          anchorPos: AnchorPos.align(AnchorAlign.top),
+          builder: (context) => Transform.translate(
+            offset: const Offset(0, 2),
+            child: Icon(
+              Icons.location_pin,
+              color: _color,
+            ),
           ),
-          position: checkpoint,
-          infoWindow: InfoWindow(
-            title: 'Checkpoint ${_checkpoints.length}',
-          ),
-          icon: BitmapDescriptor.defaultMarker,
         ),
       );
     }
@@ -247,34 +249,30 @@ class _AddRouteWindowState extends ConsumerState<AddRouteWindow> {
   void _redrawRoutes() {
     Set<LatLng> points = _combineRoutes();
 
-    const polylineId = PolylineId(
-      'new_route/paths',
-    );
+    const polylineId = 'new_route/paths';
 
     final polyline = Polyline(
-      polylineId: polylineId,
       points: points.toList(),
       color: _color,
-      width: 5,
+      strokeWidth: 3,
+      isDotted: true,
     );
 
     mapController.removePolyline(polylineId);
-    mapController.addPolyline(polyline);
+    mapController.addPolyline(polylineId, polyline);
   }
 
   void _clearPolylines() {
-    const polylineId = PolylineId(
-      'new_route/paths',
-    );
+    const polylineId = 'new_route/paths';
 
     mapController.removePolyline(polylineId);
   }
 
   void _clearMarkers() {
     for (final checkpoint in _checkpoints) {
-      mapController.removeMarker(MarkerId(
+      mapController.removeMarker(
         'new_route/checkpoint_${checkpoint.latitude}_${checkpoint.longitude}',
-      ));
+      );
     }
   }
 
@@ -288,21 +286,12 @@ class _AddRouteWindowState extends ConsumerState<AddRouteWindow> {
 
   void _zoomToCheckpoints() {
     Set<LatLng> points = {};
+
     for (final point in _routes.values) {
       points.addAll(point);
     }
-    final bound = MapHelper.computeBounds(points.toList());
 
-    if (bound == null) {
-      return;
-    }
-
-    mapController.animateCamera(
-      CameraUpdate.newLatLngBounds(
-        bound,
-        100,
-      ),
-    );
+    mapController.boundTo(LatLngBounds.fromPoints(points.toList()));
   }
 
   Future<void> _saveRoute() async {
@@ -350,8 +339,8 @@ class _AddRouteWindowState extends ConsumerState<AddRouteWindow> {
 
   @override
   void dispose() {
-    _clearMarkers();
-    _clearPolylines();
+    // _clearMarkers();
+    // _clearPolylines();
     _routeNameController.dispose();
     _descriptionController.dispose();
     _tapSubscription?.cancel();
@@ -511,11 +500,9 @@ class _AddRouteWindowState extends ConsumerState<AddRouteWindow> {
                 for (int i = 0; i < _checkpoints.length; i++)
                   InkWell(
                     onTap: () {
-                      mapController.animateCamera(
-                        CameraUpdate.newLatLngZoom(
-                          _checkpoints[i],
-                          16,
-                        ),
+                      mapController.animateTo(
+                        _checkpoints[i],
+                        zoom: 16,
                       );
                     },
                     child: Padding(

@@ -298,11 +298,30 @@ class _AddFleetWindowState extends ConsumerState<AddFleetWindow> {
                   decoration: const InputDecoration(
                     labelText: 'Trayek',
                   ),
+                  isExpanded: true,
                   items: routes
                       .map(
                         (route) => DropdownMenuItem(
                           value: route.id,
-                          child: RoutePill(route: route),
+                          child: Row(
+                            children: [
+                              RoutePill(route: route),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  route.description ?? '-',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall!
+                                      .copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onBackground,
+                                      ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       )
                       .toList()

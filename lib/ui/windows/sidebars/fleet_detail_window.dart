@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:latlong2/latlong.dart';
 
 import '../../../domain/models/driver_chat_model.dart';
 import '../../../domain/models/driver_model.dart';
@@ -97,14 +97,12 @@ class _FleetDetailWindowState extends ConsumerState<FleetDetailWindow> {
                       ref.read(focusedFleetProvider.notifier).state = fleet;
 
                       if (position != null) {
-                        ref.read(mapControllerProvider.notifier).animateCamera(
-                              CameraUpdate.newLatLngZoom(
-                                LatLng(
-                                  position.latitude ?? 0,
-                                  position.longitude ?? 0,
-                                ),
-                                16,
+                        ref.read(mapControllerProvider.notifier).animateTo(
+                              LatLng(
+                                position.latitude ?? 0,
+                                position.longitude ?? 0,
                               ),
+                              zoom: 16,
                             );
                       }
                     },

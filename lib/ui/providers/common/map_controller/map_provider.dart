@@ -1,7 +1,10 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_animations/flutter_map_animations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:latlong2/latlong.dart';
 
 import 'map_state.dart';
 
@@ -13,8 +16,8 @@ final mapControllerProvider =
 class MapControllerNotifier extends StateNotifier<MapState> {
   MapControllerNotifier() : super(const MapState());
 
-  GoogleMapController? _googleMapController;
-  GoogleMapController? get controller => _googleMapController;
+  AnimatedMapController? _mapController;
+  AnimatedMapController? get controller => _mapController;
 
   // tap stream
   final StreamController<LatLng> _tapController =
@@ -25,8 +28,8 @@ class MapControllerNotifier extends StateNotifier<MapState> {
     _tapController.add(latLng);
   }
 
-  void setGoogleMapController(GoogleMapController controller) {
-    _googleMapController = controller;
+  void setAnimatedMapController(AnimatedMapController controller) {
+    _mapController = controller;
   }
 
   void requestFocus() {
@@ -37,32 +40,44 @@ class MapControllerNotifier extends StateNotifier<MapState> {
     state = state.copyWith(cleanMode: false);
   }
 
-  void addMarker(Marker marker) {
-    state = state.copyWith(markers: {...state.markers, marker});
+  void addMarker(String key, Marker marker) {
+    state = state.copyWith(markers: {...state.markers, key: marker});
   }
 
-  void addPolyline(Polyline polyline) {
-    state = state.copyWith(polylines: {...state.polylines, polyline});
+  void addPolyline(String key, Polyline polyline) {
+    state = state.copyWith(polylines: {...state.polylines, key: polyline});
   }
 
-  void animateCamera(CameraUpdate cameraUpdate) {
-    controller?.animateCamera(cameraUpdate);
-  }
+  // void animateCamera(CameraUpdate cameraUpdate) {
+  //   controller?.animateCamera(cameraUpdate);
+  // }
 
-  void removePolyline(PolylineId polylineId) {
-    state = state.copyWith(
-      polylines: state.polylines.where((polyline) {
-        return polyline.polylineId != polylineId;
-      }).toSet(),
+  void animateTo(LatLng latLng, {double? zoom}) {
+    controller?.animateTo(
+      dest: latLng,
+      zoom: zoom,
     );
   }
 
-  void removeMarker(MarkerId markerId) {
-    state = state.copyWith(
-      markers: state.markers.where((marker) {
-        return marker.markerId != markerId;
-      }).toSet(),
+  void boundTo(LatLngBounds bounds, {EdgeInsets? padding}) {
+    controller?.animatedFitBounds(
+      bounds,
+      options: padding != null ? FitBoundsOptions(padding: padding) : null,
     );
+  }
+
+  void removePolyline(String key) {
+    state = state.copyWith(polylines: {
+      for (final entry in state.polylines.entries)
+        if (entry.key != key) entry.key: entry.value
+    });
+  }
+
+  void removeMarker(String key) {
+    state = state.copyWith(markers: {
+      for (final entry in state.markers.entries)
+        if (entry.key != key) entry.key: entry.value
+    });
   }
 
   @override

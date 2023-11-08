@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_map/plugin_api.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import '../helpers/map_helper.dart';
+// import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 import '../providers/common/content_window_controller/content_window_controller.dart';
 import '../providers/common/map_controller/map_bound_provider.dart';
 import '../providers/common/map_controller/map_provider.dart';
@@ -23,6 +24,7 @@ class ControlBar extends ConsumerStatefulWidget {
 class _TopBarState extends ConsumerState<ControlBar> {
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     final focusedRoute = ref.watch(focusedRouteProvider);
     final focusedFleet = ref.watch(focusedFleetProvider);
 
@@ -36,12 +38,9 @@ class _TopBarState extends ConsumerState<ControlBar> {
             constraints: const BoxConstraints.tightFor(width: 28, height: 28),
             padding: EdgeInsets.zero,
             onPressed: () {
-              ref.read(mapControllerProvider.notifier).animateCamera(
-                    CameraUpdate.newLatLngBounds(
-                      ref.read(mapBoundProvider),
-                      200,
-                    ),
-                  );
+              ref
+                  .read(mapControllerProvider.notifier)
+                  .boundTo(ref.read(mapBoundProvider));
             },
             icon: const Icon(Icons.fullscreen_rounded),
           ),
@@ -51,12 +50,18 @@ class _TopBarState extends ConsumerState<ControlBar> {
             RoutePill(
               route: focusedRoute!,
               onTap: () {
-                ref.read(mapControllerProvider.notifier).animateCamera(
-                      CameraUpdate.newLatLngBounds(
-                        MapHelper.computeBounds(focusedRoute.checkpoints!)!,
-                        200,
+                ref.read(mapControllerProvider.notifier).boundTo(
+                      LatLngBounds.fromPoints(
+                        focusedRoute.checkpoints!,
                       ),
+                      padding: EdgeInsets.all(width * 0.2),
                     );
+                // ref.read(mapControllerProvider.notifier).animateCamera(
+                //       CameraUpdate.newLatLngBounds(
+                //         MapHelper.computeBounds(focusedRoute.checkpoints!)!,
+                //         200,
+                //       ),
+                //     );
               },
               onClose: () {
                 ref.read(focusedRouteProvider.notifier).state = null;

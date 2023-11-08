@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../domain/models/fleet_model.dart';
 import '../../domain/models/route_model.dart';
 import '../../domain/repositories/route_repository.dart';
-import '../helpers/map_helper.dart';
 import '../providers/common/content_window_controller/content_window_controller.dart';
 import '../providers/common/map_controller/map_provider.dart';
 import '../providers/common/sections/sidebar_content_controller.dart';
@@ -221,10 +220,7 @@ class _RouteManagerWindowState extends ConsumerState<RouteManagerWindow> {
                   ref.read(focusedRouteProvider.notifier).state = route;
                   ref
                       .read(mapControllerProvider.notifier)
-                      .animateCamera(CameraUpdate.newLatLngBounds(
-                        MapHelper.computeBounds(route.routes!)!,
-                        64,
-                      ));
+                      .boundTo(LatLngBounds.fromPoints(route.routes!));
                 } else {
                   ref.read(focusedRouteProvider.notifier).state = null;
                 }
