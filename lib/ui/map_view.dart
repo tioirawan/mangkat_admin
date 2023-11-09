@@ -16,6 +16,7 @@ import 'providers/fleet/fleet_occupancy_provider.dart';
 import 'providers/fleet/fleets_position_provider.dart';
 import 'providers/fleet/fleets_provider.dart';
 import 'providers/fleet/focused_fleet_provider.dart';
+import 'providers/pick_requests/pick_requests_provider.dart';
 import 'providers/route/edited_route_provider.dart';
 import 'providers/route/focused_route_provider.dart';
 import 'providers/route/routes_filtered_provider.dart';
@@ -52,11 +53,13 @@ class MapViewState extends ConsumerState<MapView>
     final config = ref.watch(configProvider);
     final state = ref.watch(mapControllerProvider);
     final routes = ref.watch(routeFilteredProvider);
+    final allRoutes = ref.watch(routeFilteredProvider);
     final fleetsPosition = ref.watch(fleetsPositionProvider);
     final focusedRoute = ref.watch(focusedRouteProvider);
     final focusedFleet = ref.watch(focusedFleetProvider);
     final editedRoute = ref.watch(editedRouteProvider);
     final fleets = ref.watch(fleetsProvider).value ?? [];
+    final pickRequests = ref.watch(pickRequestsProvider).value ?? [];
 
     ref.listen(fleetsPositionProvider, (_, state) {
       final positions = state.value ?? {};
@@ -133,9 +136,11 @@ class MapViewState extends ConsumerState<MapView>
             onTap: (polylines, _) {
               if (polylines.isEmpty) return;
               final tag = polylines.first.tag;
-              final route = routes.firstWhere(
-                (route) => route.id == tag,
-              );
+              final route = allRoutes
+                  .where(
+                    (route) => route.id == tag,
+                  )
+                  .firstOrNull;
 
               ref.read(focusedRouteProvider.notifier).state = route;
               ref
@@ -146,6 +151,37 @@ class MapViewState extends ConsumerState<MapView>
           MarkerLayer(
             markers: [
               for (final marker in state.markers.values) marker,
+              // render pick requests
+              if (!state.cleanMode)
+                for (final request in pickRequests)
+                  if (routes.any((route) => route.id == request.routeId))
+                    Marker(
+                      point: LatLng(
+                        request.latitude ?? 0,
+                        request.longitude ?? 0,
+                      ),
+                      width: 8,
+                      height: 8,
+                      builder: (context) {
+                        final route = allRoutes
+                            .where(
+                              (route) => route.id == request.routeId,
+                            )
+                            .firstOrNull;
+
+                        return Container(
+                          decoration: BoxDecoration(
+                            color: (route?.color ?? Colors.blue),
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: Colors.red.withOpacity(0.25),
+                              width: 2,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+
               // render fleet marker
               if (!state.cleanMode)
                 for (MapEntry<String, FleetPositionModel> entry
@@ -158,14 +194,23 @@ class MapViewState extends ConsumerState<MapView>
                     width: 22,
                     height: 22,
                     builder: (context) {
-                      if (fleets.isEmpty || routes.isEmpty) {
+                      if (fleets.isEmpty || allRoutes.isEmpty) {
                         return const SizedBox();
                       }
 
-                      final fleet =
-                          fleets.firstWhere((fleet) => fleet.id == entry.key);
-                      final route = routes
-                          .firstWhere((route) => route.id == fleet.routeId);
+                      final fleet = fleets
+                          .where((fleet) => fleet.id == entry.key)
+                          .firstOrNull;
+
+                      final route = allRoutes
+                          .where((route) => route.id == fleet?.routeId)
+                          .firstOrNull;
+
+                      if (fleet == null ||
+                          route == null ||
+                          !routes.any((element) => element.id == route.id)) {
+                        return const SizedBox();
+                      }
 
                       return GestureDetector(
                         onTap: () {
