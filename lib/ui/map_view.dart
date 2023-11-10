@@ -125,10 +125,10 @@ class MapViewState extends ConsumerState<MapView>
                             focusedRoute.id == route.id ||
                             editedRoute == null
                         ? route.color!
-                        : route.color!.withOpacity(0.5),
+                        : route.color!.withOpacity(0.25),
                     strokeWidth:
                         focusedRoute == null || focusedRoute.id == route.id
-                            ? 2
+                            ? 3
                             : 1,
                     isDotted: route.type == RouteType.temporary,
                   ),
