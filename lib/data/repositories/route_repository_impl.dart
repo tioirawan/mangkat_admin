@@ -9,6 +9,7 @@ class RouteRepositoryImpl implements RouteRepository {
   RouteRepositoryImpl(this._firestore);
 
   CollectionReference get _routes => _firestore.collection('routes');
+  CollectionReference get _fleets => _firestore.collection('fleets');
 
   @override
   Stream<List<RouteModel>> routesStream() {
@@ -48,5 +49,44 @@ class RouteRepositoryImpl implements RouteRepository {
   Future<RouteModel> updateRoute(RouteModel route) async {
     await _routes.doc(route.id).update(route.toDocument());
     return route;
+  }
+
+  @override
+  Future<void> assignRouteToFleets(
+    String routeId,
+    List<String> fleetIds, [
+    List<String> deletedFleetIds = const [],
+  ]) async {
+    final batch = _firestore.batch();
+    for (final fleetId in deletedFleetIds) {
+      final ref = _fleets.doc(fleetId);
+      batch.update(ref, {
+        'route_id': null,
+      });
+    }
+
+    for (final fleetId in fleetIds) {
+      final ref = _fleets.doc(fleetId);
+      batch.update(ref, {
+        'route_id': routeId,
+      });
+    }
+
+    await batch.commit();
+  }
+
+  @override
+  Future<void> unassignRouteFromFleets(
+    String routeId,
+    List<String> fleetIds,
+  ) async {
+    final batch = _firestore.batch();
+    for (final fleetId in fleetIds) {
+      final ref = _fleets.doc(fleetId);
+      batch.update(ref, {
+        'route_id': null,
+      });
+    }
+    await batch.commit();
   }
 }

@@ -10,6 +10,7 @@ import '../providers/fleet/fleets_provider.dart';
 import '../providers/route/route_provider.dart';
 import '../widgets/driver_pill.dart';
 import '../widgets/fleet_pill.dart';
+import '../widgets/fleet_status_pill.dart';
 import '../widgets/route_pill.dart';
 import 'common/table_wrapper.dart';
 import 'sidebars/add_fleet_window.dart';
@@ -117,33 +118,7 @@ class _FleetManagerWindowState extends ConsumerState<FleetManagerWindow> {
   }
 
   Widget _buildStatus(FleetModel fleet) {
-    final color = switch (fleet.status) {
-      FleetStatus.idle => const Color.fromARGB(255, 181, 181, 181),
-      FleetStatus.operating => const Color(0xff27ae60),
-      FleetStatus.rented => const Color(0xff2980b9),
-      FleetStatus.maintenance => const Color(0xfff1c40f),
-      FleetStatus.broken => const Color.fromARGB(255, 255, 95, 95),
-      FleetStatus.unknown => const Color.fromARGB(255, 181, 181, 181),
-      _ => const Color.fromARGB(255, 181, 181, 181),
-    };
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(999),
-        ),
-        child: Text(
-          fleet.status?.name ?? '',
-          style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.w700,
-                fontSize: 10,
-              ),
-        ),
-      ),
-    );
+    return FleetStatusPill(fleet: fleet);
   }
 
   Widget _buildFleetDriver(FleetModel fleet) {

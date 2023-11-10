@@ -2,14 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:latlong2/latlong.dart';
 
 import '../../../domain/models/driver_chat_model.dart';
 import '../../../domain/models/driver_model.dart';
 import '../../../domain/models/fleet_position_model.dart';
 import '../../helpers/date_helper.dart';
 import '../../providers/auth/current_user_provider.dart';
-import '../../providers/common/map_controller/map_provider.dart';
 import '../../providers/common/sections/sidebar_content_controller.dart';
 import '../../providers/driver/driver_chat_provider.dart';
 import '../../providers/driver/driver_provider.dart';
@@ -19,6 +17,7 @@ import '../../providers/fleet/fleet_provider.dart';
 import '../../providers/fleet/focused_fleet_provider.dart';
 import '../../providers/route/route_provider.dart';
 import '../../themes/app_theme.dart';
+import '../../widgets/fleet_focus_button.dart';
 import '../../widgets/route_pill.dart';
 
 class FleetDetailWindow extends ConsumerStatefulWidget {
@@ -76,49 +75,7 @@ class _FleetDetailWindowState extends ConsumerState<FleetDetailWindow> {
                     ],
                   ),
                 ),
-                Material(
-                  shape: const CircleBorder(),
-                  color: focusedFleet?.id == fleet?.id
-                      ? Theme.of(context)
-                          .colorScheme
-                          .onBackground
-                          .withOpacity(0.1)
-                      : Theme.of(context).colorScheme.primary,
-                  child: InkWell(
-                    onTap: () {
-                      if (focusedFleet?.id == fleet?.id) {
-                        ref.read(focusedFleetProvider.notifier).state = null;
-                        return;
-                      }
-
-                      final position =
-                          ref.watch(fleetPositionProvider(fleet?.id));
-
-                      ref.read(focusedFleetProvider.notifier).state = fleet;
-
-                      if (position != null) {
-                        ref.read(mapControllerProvider.notifier).animateTo(
-                              LatLng(
-                                position.latitude ?? 0,
-                                position.longitude ?? 0,
-                              ),
-                              zoom: 16,
-                            );
-                      }
-                    },
-                    customBorder: const CircleBorder(),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Icon(
-                        focusedFleet?.id == fleet?.id
-                            ? Icons.visibility_off_rounded
-                            : Icons.visibility_rounded,
-                        color: Theme.of(context).colorScheme.onError,
-                        size: 18,
-                      ),
-                    ),
-                  ),
-                ),
+                FleetFocusButton(fleet: fleet),
                 const SizedBox(width: 8),
                 Material(
                   shape: const CircleBorder(),

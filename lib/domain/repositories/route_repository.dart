@@ -11,6 +11,9 @@ abstract class RouteRepository {
   Future<RouteModel> addRoute(RouteModel route);
   Future<RouteModel> updateRoute(RouteModel route);
   Future<void> deleteRoute(RouteModel route);
+  Future<void> assignRouteToFleets(String routeId, List<String> fleetIds,
+      [List<String> deletedFleetIds = const []]);
+  Future<void> unassignRouteFromFleets(String routeId, List<String> fleetIds);
 }
 
 final routeRepositoryProvider = Provider<RouteRepository>(

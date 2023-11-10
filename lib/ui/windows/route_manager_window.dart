@@ -14,6 +14,7 @@ import '../providers/route/routes_provider.dart';
 import '../widgets/route_pill.dart';
 import 'common/table_wrapper.dart';
 import 'sidebars/add_route_window.dart';
+import 'sidebars/route_detail_window.dart';
 
 class RouteManagerWindow extends ConsumerStatefulWidget {
   const RouteManagerWindow({super.key});
@@ -168,7 +169,7 @@ class _RouteManagerWindowState extends ConsumerState<RouteManagerWindow> {
     BuildContext context,
     RouteModel route,
   ) {
-    final fleets = ref.watch(routeFleetNumberProvider(route));
+    final fleets = ref.watch(routeFleetsProvider(route.id));
     final operatingFleets =
         fleets.where((fleet) => fleet.status == FleetStatus.operating).toList();
     final colorScheme = Theme.of(context).colorScheme;
@@ -221,6 +222,9 @@ class _RouteManagerWindowState extends ConsumerState<RouteManagerWindow> {
                   ref
                       .read(mapControllerProvider.notifier)
                       .boundTo(LatLngBounds.fromPoints(route.routes!));
+                  ref
+                      .read(rightSidebarContentController.notifier)
+                      .open(RouteDetailWindow.name, route.id);
                 } else {
                   ref.read(focusedRouteProvider.notifier).state = null;
                 }

@@ -9,7 +9,6 @@ import 'package:latlong2/latlong.dart';
 import '../common/config_provider.dart';
 import '../domain/models/fleet_position_model.dart';
 import '../domain/models/route_model.dart';
-import 'providers/common/content_window_controller/content_window_controller.dart';
 import 'providers/common/map_controller/map_provider.dart';
 import 'providers/common/sections/sidebar_content_controller.dart';
 import 'providers/fleet/fleet_occupancy_provider.dart';
@@ -21,6 +20,7 @@ import 'providers/route/edited_route_provider.dart';
 import 'providers/route/focused_route_provider.dart';
 import 'providers/route/routes_filtered_provider.dart';
 import 'windows/sidebars/fleet_detail_window.dart';
+import 'windows/sidebars/route_detail_window.dart';
 
 class MapView extends ConsumerStatefulWidget {
   const MapView({super.key});
@@ -142,10 +142,15 @@ class MapViewState extends ConsumerState<MapView>
                   )
                   .firstOrNull;
 
+              if (route == null) return;
+
               ref.read(focusedRouteProvider.notifier).state = route;
+              // ref
+              //     .read(contentWindowProvider.notifier)
+              //     .show(ContentWindowType.routeManager);
               ref
-                  .read(contentWindowProvider.notifier)
-                  .show(ContentWindowType.routeManager);
+                  .read(rightSidebarContentController.notifier)
+                  .open(RouteDetailWindow.name, route.id);
             },
           ),
           MarkerLayer(

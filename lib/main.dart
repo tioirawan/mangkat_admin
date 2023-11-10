@@ -16,6 +16,32 @@ Future<void> main() async {
   );
 
   runApp(
-    const ProviderScope(child: App()),
+    ProviderScope(
+      observers: [
+        DebugLogger(),
+      ],
+      child: const App(),
+    ),
   );
+}
+
+class DebugLogger extends ProviderObserver {
+  DebugLogger();
+
+  int updateCount = 0;
+
+  @override
+  void didUpdateProvider(ProviderBase<Object?> provider, Object? previousValue,
+      Object? newValue, ProviderContainer container) {
+    super.didUpdateProvider(provider, previousValue, newValue, container);
+
+    print('updateCount: ${++updateCount}');
+
+    // print('''
+    // Provider ${provider.name ?? provider.runtimeType} updated:
+    // oldValue: $previousValue
+    // newValue: $newValue
+    // --------------------------------------\n\n\n
+    // ''');
+  }
 }

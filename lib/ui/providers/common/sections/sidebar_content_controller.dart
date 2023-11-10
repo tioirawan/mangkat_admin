@@ -9,6 +9,7 @@ import '../../../windows/sidebars/add_fleet_window.dart';
 import '../../../windows/sidebars/add_route_window.dart';
 import '../../../windows/sidebars/filter_window.dart';
 import '../../../windows/sidebars/fleet_detail_window.dart';
+import '../../../windows/sidebars/route_detail_window.dart';
 import '../../../windows/sidebars/statistic_window.dart';
 import '../events/global_events.dart';
 import '../events/global_events_provider.dart';
@@ -59,6 +60,13 @@ final rightSidebarContentController =
       FleetDetailWindow.name,
       (Object? arg) => FleetDetailWindow(
         fleetId: arg as String?,
+      ),
+      false,
+    )
+    ..register(
+      RouteDetailWindow.name,
+      (Object? arg) => RouteDetailWindow(
+        routeId: arg as String?,
       ),
       false,
     ),
