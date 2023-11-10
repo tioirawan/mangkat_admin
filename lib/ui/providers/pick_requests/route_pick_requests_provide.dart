@@ -11,5 +11,5 @@ final routePickRequestsProvider = StreamProvider.autoDispose
 
   final repository = ref.watch(pickRequestRepositoryProvider);
 
-  return repository.streamAllPickRequests();
+  return repository.streamRoutePickRequests(routeId);
 });

@@ -34,4 +34,20 @@ class FleetOccupanciesRepositoryImpl implements FleetOccupanciesRepository {
       return occupancies ?? 0;
     });
   }
+
+  @override
+  Stream<Map<String, int>> geAllOccupanciesStreams() {
+    return _ref.onValue.map((event) {
+      if (event.snapshot.value == null) {
+        return {};
+      }
+
+      final occupancies = event.snapshot.value as Map<dynamic, dynamic>;
+
+      print(occupancies.length);
+
+      return occupancies
+          .map((key, value) => MapEntry(key as String, value as int));
+    });
+  }
 }

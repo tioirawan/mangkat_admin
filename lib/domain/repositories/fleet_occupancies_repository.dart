@@ -6,6 +6,7 @@ import '../services/firebase_service.dart';
 abstract class FleetOccupanciesRepository {
   Future<int> getOccupancies(String fleetId);
   Stream<int> getOccupanciesStream(String fleetId);
+  Stream<Map<String, int>> geAllOccupanciesStreams();
 }
 
 final fleetOccupanciesRepositoryProvider = Provider<FleetOccupanciesRepository>(
