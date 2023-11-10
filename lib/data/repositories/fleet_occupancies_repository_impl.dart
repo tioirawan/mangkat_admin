@@ -44,8 +44,6 @@ class FleetOccupanciesRepositoryImpl implements FleetOccupanciesRepository {
 
       final occupancies = event.snapshot.value as Map<dynamic, dynamic>;
 
-      print(occupancies.length);
-
       return occupancies
           .map((key, value) => MapEntry(key as String, value as int));
     });

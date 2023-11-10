@@ -20,7 +20,7 @@ class _SplashPageState extends ConsumerState<SplashPage> {
     if (user is AsyncError) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(user.error.toString()),
+          content: Text('${user.error}'),
         ),
       );
 

@@ -201,7 +201,7 @@ class _FleetSelectorPopupState extends ConsumerState<FleetSelectorPopup> {
                   child: CircularProgressIndicator(),
                 ),
                 error: (e, s) => Center(
-                  child: Text(e.toString()),
+                  child: Text('$e'),
                 ),
               ),
               const SizedBox(height: 18),
@@ -225,7 +225,6 @@ class _FleetSelectorPopupState extends ConsumerState<FleetSelectorPopup> {
   }
 
   Widget _buildFleetsList(BuildContext context, List<FleetModel> fleets) {
-    final theme = Theme.of(context);
     return Expanded(
       child: ListView.builder(
         padding: EdgeInsets.zero,

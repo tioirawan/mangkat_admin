@@ -40,7 +40,7 @@ class _FleetManagerWindowState extends ConsumerState<FleetManagerWindow> {
         padding: const EdgeInsets.all(24),
         child: fleetsState.when(
           data: (fleets) => _buildTable(context, fleets),
-          error: (error, stackTrace) => Center(child: Text(error.toString())),
+          error: (error, stackTrace) => Center(child: Text('$error')),
           loading: () => const Center(child: CircularProgressIndicator()),
         ),
       ),
@@ -106,7 +106,7 @@ class _FleetManagerWindowState extends ConsumerState<FleetManagerWindow> {
               FleetPill(fleet: fleet),
               _buildStatus(fleet),
               Text(fleet.type?.name ?? '-'),
-              Text(fleet.maxCapacity?.toString() ?? '-'),
+              Text("${fleet.maxCapacity ?? '-'}"),
               Text(fleet.notes ?? '-'),
               _buildFleetRoute(fleet),
               _buildFleetDriver(fleet),

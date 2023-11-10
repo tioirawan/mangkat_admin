@@ -39,7 +39,7 @@ class _DriverManagerWindowState extends ConsumerState<DriverManagerWindow> {
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (error, stackTrace) => Center(
             child: Text(
-              error.toString(),
+              '$error',
               style: Theme.of(context).textTheme.bodyLarge,
             ),
           ),

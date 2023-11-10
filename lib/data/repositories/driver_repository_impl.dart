@@ -41,38 +41,33 @@ class DriverRepositoryImpl implements DriverRepository {
     String password, [
     Uint8List? image,
   ]) async {
-    try {
-      final callable = _functions.httpsCallable('createUser');
-      final response = await callable.call({
-        'email': driver.email,
-        'password': password,
-      });
+    final callable = _functions.httpsCallable('createUser');
+    final response = await callable.call({
+      'email': driver.email,
+      'password': password,
+    });
 
-      final uid = response.data['uid'];
+    final uid = response.data['uid'];
 
-      if (uid == null) {
-        throw Exception(response.data ?? 'Error creating user');
-      }
-
-      if (image != null) {
-        // only on web, on mobile, we use putFile
-        final snapshot = await _storageRef.child('$uid.png').putData(image);
-        final downloadUrl = await snapshot.ref.getDownloadURL();
-        driver = driver.copyWith(image: downloadUrl);
-      }
-
-      final doc = _drivers.doc(uid);
-
-      await doc.set(driver.copyWith(createdAt: DateTime.now()).toDocument());
-
-      return driver.copyWith(
-        id: driver.id,
-        reference: doc,
-      );
-    } on Exception catch (e) {
-      print(e);
-      rethrow;
+    if (uid == null) {
+      throw Exception(response.data ?? 'Error creating user');
     }
+
+    if (image != null) {
+      // only on web, on mobile, we use putFile
+      final snapshot = await _storageRef.child('$uid.png').putData(image);
+      final downloadUrl = await snapshot.ref.getDownloadURL();
+      driver = driver.copyWith(image: downloadUrl);
+    }
+
+    final doc = _drivers.doc(uid);
+
+    await doc.set(driver.copyWith(createdAt: DateTime.now()).toDocument());
+
+    return driver.copyWith(
+      id: driver.id,
+      reference: doc,
+    );
   }
 
   @override

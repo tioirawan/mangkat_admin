@@ -41,7 +41,7 @@ class _RouteManagerWindowState extends ConsumerState<RouteManagerWindow> {
         child: state.when(
           data: (routes) => _buildTable(context, routes),
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (e, s) => Center(child: Text(e.toString())),
+          error: (error, s) => Center(child: Text('$error')),
         ),
       ),
     );

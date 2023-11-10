@@ -308,10 +308,8 @@ class _AddDriverWindowState extends ConsumerState<AddDriverWindow> {
                     suffixIcon: Icon(Icons.calendar_today_rounded),
                   ),
                   controller: TextEditingController(
-                    text: _drivingLicenseExpiryDate
-                        .toLocal()
-                        .toString()
-                        .split(' ')[0],
+                    text:
+                        '${_drivingLicenseExpiryDate.toLocal()}'.split(' ')[0],
                   ),
                   onTap: () async {
                     final date = await showDatePicker(
@@ -401,11 +399,11 @@ class _AddDriverWindowState extends ConsumerState<AddDriverWindow> {
       ref
           .read(rightSidebarContentController.notifier)
           .close(AddDriverWindow.name);
-    } on Exception catch (e) {
+    } on Exception catch (error) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(e.toString()),
+            content: Text('$error'),
           ),
         );
 

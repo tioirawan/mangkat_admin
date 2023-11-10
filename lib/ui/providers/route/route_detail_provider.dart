@@ -43,7 +43,7 @@ final routeDetailProvider =
   int totalPassangers = 0;
 
   int totalFleets = fleets.length;
-  int totalDriver = fleets.where((fleet) => fleet.driverId != null).length ?? 0;
+  int totalDriver = fleets.where((fleet) => fleet.driverId != null).length;
 
   for (final fleet in fleets) {
     totalPassangers += passangers.value?[fleet.id] ?? 0;

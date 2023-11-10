@@ -257,7 +257,7 @@ class _FleetDetailWindowState extends ConsumerState<RouteDetailWindow> {
                 Align(
                   alignment: Alignment.centerRight,
                   child: Text(
-                    detail?.totalFleets.toString() ?? '-',
+                    "${detail?.totalFleets ?? '-'}",
                   ),
                 ),
               ],
@@ -273,7 +273,7 @@ class _FleetDetailWindowState extends ConsumerState<RouteDetailWindow> {
                 Align(
                   alignment: Alignment.centerRight,
                   child: Text(
-                    detail?.totalDriver.toString() ?? '-',
+                    "${detail?.totalDriver ?? '-'}",
                   ),
                 ),
               ],
@@ -289,7 +289,7 @@ class _FleetDetailWindowState extends ConsumerState<RouteDetailWindow> {
                 Align(
                   alignment: Alignment.centerRight,
                   child: Text(
-                    detail?.totalPickupRequests.toString() ?? '-',
+                    "${detail?.totalPickupRequests ?? '-'}",
                   ),
                 ),
               ],
@@ -305,7 +305,7 @@ class _FleetDetailWindowState extends ConsumerState<RouteDetailWindow> {
                 Align(
                   alignment: Alignment.centerRight,
                   child: Text(
-                    detail?.totalPassengers.toString() ?? '-',
+                    "${detail?.totalPassengers ?? '-'}",
                   ),
                 ),
               ],

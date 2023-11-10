@@ -45,7 +45,7 @@ class _AddFleetWindowState extends ConsumerState<AddFleetWindow> {
   );
   late final TextEditingController _maxCapacityController =
       TextEditingController(
-    text: widget.fleet?.maxCapacity?.toString() ?? '0',
+    text: "${widget.fleet?.maxCapacity ?? '0'}",
   );
 
   late FleetStatus _status = widget.fleet?.status ?? FleetStatus.idle;
@@ -343,7 +343,7 @@ class _AddFleetWindowState extends ConsumerState<AddFleetWindow> {
                 child: CircularProgressIndicator(),
               ),
               error: (error, stackTrace) => Center(
-                child: Text(error.toString()),
+                child: Text('$error'),
               ),
             );
           }),
@@ -414,11 +414,11 @@ class _AddFleetWindowState extends ConsumerState<AddFleetWindow> {
       ref
           .read(rightSidebarContentController.notifier)
           .close(AddFleetWindow.name);
-    } on Exception catch (e) {
+    } on Exception catch (error) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(e.toString()),
+            content: Text('$error'),
           ),
         );
 

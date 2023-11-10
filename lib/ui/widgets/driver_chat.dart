@@ -96,7 +96,7 @@ class _DriverChatState extends ConsumerState<DriverChat> {
                     separatorBuilder: (_, __) => const SizedBox(height: 16),
                   ),
             error: (error, _) => Center(
-              child: Text(error.toString()),
+              child: Text('$error'),
             ),
             loading: () => const Center(
               child: CircularProgressIndicator(),

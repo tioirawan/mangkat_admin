@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../domain/models/fleet_model.dart';
 import '../fleet/fleets_provider.dart';
 
-// TODO: test .autoDispose
 final routeFleetsProvider =
     StateProvider.autoDispose.family<List<FleetModel>, String?>((ref, routeId) {
   final fleetsState = ref.watch(fleetsProvider);
