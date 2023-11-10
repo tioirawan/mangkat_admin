@@ -1,4 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/foundation.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../domain/models/fleet_position_model.dart';
@@ -50,13 +51,26 @@ class FleetPositionRepositoryImpl implements FleetPositionRepository {
         return fleetPositions;
       }
 
-      final Map<String, dynamic> data =
-          event.snapshot.value as Map<String, dynamic>;
+      if (kIsWeb) {
+        final Map<String, dynamic> data =
+            event.snapshot.value as Map<String, dynamic>;
 
-      data.forEach((key, value) {
-        fleetPositions[key] =
-            FleetPositionModel.fromJson(value as Map<String, dynamic>);
-      });
+        data.forEach((key, value) {
+          fleetPositions[key] =
+              FleetPositionModel.fromJson(value as Map<String, dynamic>);
+        });
+      } else {
+        final Map<String, dynamic> data = Map<String, dynamic>.from(
+          event.snapshot.value as Map<Object?, Object?>,
+        );
+
+        data.forEach((key, value) {
+          fleetPositions[key as dynamic] =
+              FleetPositionModel.fromJson(Map<String, dynamic>.from(
+            value as Map<Object?, Object?>,
+          ));
+        });
+      }
 
       return fleetPositions;
     }).throttleTime(const Duration(seconds: 1));

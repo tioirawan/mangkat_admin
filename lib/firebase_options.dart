@@ -31,10 +31,7 @@ class DefaultFirebaseOptions {
           'you can reconfigure this by running the FlutterFire CLI again.',
         );
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -61,5 +58,15 @@ class DefaultFirebaseOptions {
     databaseURL: 'https://mangkat-mage-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'mangkat-mage.appspot.com',
     measurementId: 'G-S4ZF0WW02M',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyDUGJjlnQAoFhkPRPMEsXXKP41al_Bjwko',
+    appId: '1:956777547394:ios:b08b82d2983ff71a45169b',
+    messagingSenderId: '956777547394',
+    projectId: 'mangkat-mage',
+    databaseURL: 'https://mangkat-mage-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'mangkat-mage.appspot.com',
+    iosBundleId: 'id.mangkat.mangkatAdmin.RunnerTests',
   );
 }
