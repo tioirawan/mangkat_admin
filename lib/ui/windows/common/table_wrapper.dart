@@ -10,6 +10,7 @@ class TableWrapper extends ConsumerWidget {
     super.key,
     required this.child,
     required this.title,
+    this.subtitle,
     this.onAdd,
     this.onClose,
     this.maxHeight,
@@ -18,6 +19,7 @@ class TableWrapper extends ConsumerWidget {
 
   final Widget child;
   final String title;
+  final String? subtitle;
   final VoidCallback? onAdd;
   final VoidCallback? onClose;
   final double? maxHeight;
@@ -43,14 +45,32 @@ class TableWrapper extends ConsumerWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 24,
-                        fontWeight: FontWeight.w700,
-                        height: 0,
-                      ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 24,
+                            fontWeight: FontWeight.w700,
+                            height: 0,
+                          ),
+                        ),
+                        if (subtitle != null) ...[
+                          const SizedBox(height: 4),
+                          Text(
+                            subtitle!,
+                            style:
+                                Theme.of(context).textTheme.bodySmall!.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onBackground
+                                          .withOpacity(0.5),
+                                    ),
+                          ),
+                        ],
+                      ],
                     ),
                     const Spacer(),
                     if (onAdd != null)

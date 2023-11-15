@@ -4,11 +4,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../domain/models/driver_model.dart';
 import '../../../../domain/models/fleet_model.dart';
 import '../../../../domain/models/route_model.dart';
+import '../../../../domain/models/switching_area_model.dart';
 import '../../../windows/sidebars/add_driver_window.dart';
 import '../../../windows/sidebars/add_fleet_window.dart';
 import '../../../windows/sidebars/add_route_window.dart';
+import '../../../windows/sidebars/add_switching_area_window.dart';
 import '../../../windows/sidebars/filter_window.dart';
 import '../../../windows/sidebars/fleet_detail_window.dart';
+import '../../../windows/sidebars/load_balancer_window.dart';
 import '../../../windows/sidebars/route_detail_window.dart';
 import '../../../windows/sidebars/statistic_window.dart';
 import '../events/global_events.dart';
@@ -18,9 +21,15 @@ final leftSidebarContentController =
     StateNotifierProvider<ContentWindowNotifier, Map<String, (bool, Widget)>>(
   (ref) => ContentWindowNotifier(
     ref.read(globalEventsProvider.notifier),
-  )..register(
+  )
+    ..register(
       StatisticWindow.name,
       (_) => const FilterWindow(),
+      true,
+    )
+    ..register(
+      LoadBalancerWindow.name,
+      (_) => const LoadBalancerWindow(),
       true,
     ),
 );
@@ -67,6 +76,13 @@ final rightSidebarContentController =
       RouteDetailWindow.name,
       (Object? arg) => RouteDetailWindow(
         routeId: arg as String?,
+      ),
+      false,
+    )
+    ..register(
+      AddSwitchingAreaWindow.name,
+      (Object? arg) => AddSwitchingAreaWindow(
+        switchingArea: arg as SwitchingAreaModel?,
       ),
       false,
     ),
@@ -116,6 +132,8 @@ class ContentWindowNotifier extends StateNotifier<Map<String, (bool, Widget)>> {
       // close the window
       if (id == AddRouteWindow.name) {
         _globalEventsNotifier.add(GlobalEventAddRouteWindowWillClose());
+      } else if (id == AddSwitchingAreaWindow.name) {
+        _globalEventsNotifier.add(GlobalEventAddSwitchingAreaWindowWillClose());
       }
 
       state = {
@@ -158,6 +176,8 @@ class ContentWindowNotifier extends StateNotifier<Map<String, (bool, Widget)>> {
 
     if (id == AddRouteWindow.name) {
       _globalEventsNotifier.add(GlobalEventAddRouteWindowWillClose());
+    } else if (id == AddSwitchingAreaWindow.name) {
+      _globalEventsNotifier.add(GlobalEventAddSwitchingAreaWindowWillClose());
     }
 
     state = {

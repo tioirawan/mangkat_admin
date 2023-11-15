@@ -9,6 +9,7 @@ import '../themes/app_theme.dart';
 import '../windows/driver_manager_window.dart';
 import '../windows/fleet_manager_window.dart';
 import '../windows/route_manager_window.dart';
+import '../windows/switching_area_manager_window copy.dart';
 
 class Content extends ConsumerWidget {
   const Content({super.key});
@@ -59,12 +60,14 @@ class Content extends ConsumerWidget {
       ContentWindowType.routeManager => const RouteManagerWindow(),
       ContentWindowType.fleetManager => const FleetManagerWindow(),
       ContentWindowType.driverManager => const DriverManagerWindow(),
+      ContentWindowType.switchingArea => const SwitchingAreaManagerWindow(),
     };
 
     double xOffset = switch (window) {
-      ContentWindowType.routeManager => -103,
-      ContentWindowType.fleetManager => 0,
-      ContentWindowType.driverManager => 103,
+      ContentWindowType.routeManager => -145,
+      ContentWindowType.fleetManager => -48,
+      ContentWindowType.driverManager => 48,
+      ContentWindowType.switchingArea => 145,
     };
 
     return Column(

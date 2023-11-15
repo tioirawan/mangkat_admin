@@ -48,6 +48,10 @@ class MapControllerNotifier extends StateNotifier<MapState> {
     state = state.copyWith(polylines: {...state.polylines, key: polyline});
   }
 
+  void addCircle(String key, CircleMarker circle) {
+    state = state.copyWith(circles: {...state.circles, key: circle});
+  }
+
   // void animateCamera(CameraUpdate cameraUpdate) {
   //   controller?.animateCamera(cameraUpdate);
   // }
@@ -76,6 +80,13 @@ class MapControllerNotifier extends StateNotifier<MapState> {
   void removeMarker(String key) {
     state = state.copyWith(markers: {
       for (final entry in state.markers.entries)
+        if (entry.key != key) entry.key: entry.value
+    });
+  }
+
+  void removeCircle(String key) {
+    state = state.copyWith(circles: {
+      for (final entry in state.circles.entries)
         if (entry.key != key) entry.key: entry.value
     });
   }

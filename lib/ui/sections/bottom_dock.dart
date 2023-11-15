@@ -7,6 +7,7 @@ import '../themes/app_theme.dart';
 
 class BottomDock extends ConsumerWidget {
   static const double height = 18 * 2 + 46 + 8 + 10;
+  static const double width = 420;
 
   const BottomDock({super.key});
 
@@ -17,7 +18,7 @@ class BottomDock extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: AppTheme.windowCardDecoration,
-      width: 340,
+      width: width,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -47,6 +48,15 @@ class BottomDock extends ConsumerWidget {
             () => ref
                 .read(contentWindowProvider.notifier)
                 .toggle(ContentWindowType.driverManager),
+          ),
+          _buildButton(
+            context,
+            Icons.switch_access_shortcut,
+            'Switching',
+            window == ContentWindowType.switchingArea,
+            () => ref
+                .read(contentWindowProvider.notifier)
+                .toggle(ContentWindowType.switchingArea),
           ),
         ],
       ),

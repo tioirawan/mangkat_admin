@@ -18,7 +18,7 @@ class FilterWindow extends ConsumerStatefulWidget {
 }
 
 class _StatisticWindowState extends ConsumerState<FilterWindow> {
-  bool _isMinimized = false;
+  bool _isMinimized = true;
 
   @override
   Widget build(BuildContext context) {

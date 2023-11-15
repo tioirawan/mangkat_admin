@@ -19,6 +19,7 @@ import 'providers/pick_requests/pick_requests_provider.dart';
 import 'providers/route/edited_route_provider.dart';
 import 'providers/route/focused_route_provider.dart';
 import 'providers/route/routes_filtered_provider.dart';
+import 'providers/switching_area/switching_areas_provider.dart';
 import 'windows/sidebars/fleet_detail_window.dart';
 import 'windows/sidebars/route_detail_window.dart';
 
@@ -53,6 +54,7 @@ class MapViewState extends ConsumerState<MapView>
     final config = ref.watch(configProvider);
     final state = ref.watch(mapControllerProvider);
     final routes = ref.watch(routeFilteredProvider);
+    final switchingAreas = ref.watch(switchingAreasProvider).value ?? [];
     final allRoutes = ref.watch(routeFilteredProvider);
     final fleetsPosition = ref.watch(fleetsPositionProvider);
     final focusedRoute = ref.watch(focusedRouteProvider);
@@ -101,9 +103,30 @@ class MapViewState extends ConsumerState<MapView>
         mapController: _animatedMapController.mapController,
         children: [
           TileLayer(
-            urlTemplate:
-                'https://api.maptiler.com/maps/basic-v2/{z}/{x}/{y}.png?key=${config.mapTilerKey}',
+            // urlTemplate:
+            //     'https://api.maptiler.com/maps/basic-v2/{z}/{x}/{y}.png?key=${config.mapTilerKey}',
+
+            // openstreetmap
+            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
             userAgentPackageName: 'id.mangkat.mangkat-admin',
+          ),
+          CircleLayer(
+            circles: [
+              for (final circle in state.circles.values) circle,
+              for (final switchingArea in switchingAreas)
+                CircleMarker(
+                  point: LatLng(
+                    switchingArea.latitude ?? 0,
+                    switchingArea.longitude ?? 0,
+                  ),
+                  color:
+                      Theme.of(context).colorScheme.primary.withOpacity(0.25),
+                  radius: switchingArea.radius ?? 0,
+                  borderColor: Theme.of(context).colorScheme.primary,
+                  borderStrokeWidth: 2,
+                  useRadiusInMeter: true,
+                ),
+            ],
           ),
           PolylineLayer(
             polylines: [

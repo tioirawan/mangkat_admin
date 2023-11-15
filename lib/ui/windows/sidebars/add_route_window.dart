@@ -591,6 +591,7 @@ class _AddRouteWindowState extends ConsumerState<AddRouteWindow> {
     if (event is GlobalEventAddRouteWindowWillClose) {
       _clearMarkers();
       _clearPolylines();
+      mapController.removeFocus();
       ref.read(editedRouteProvider.notifier).state = null;
     }
   }

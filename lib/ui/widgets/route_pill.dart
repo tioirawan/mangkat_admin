@@ -8,17 +8,20 @@ class RoutePill extends StatelessWidget {
   final VoidCallback? onTap;
   final VoidCallback? onClose;
 
+  final bool selected;
+
   const RoutePill({
     super.key,
     required this.route,
     this.onTap,
     this.onClose,
+    this.selected = true,
   });
 
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: route.color,
+      color: selected ? route.color : Colors.grey[300],
       borderRadius: BorderRadius.circular(999),
       child: InkWell(
         onTap: onTap,
@@ -31,7 +34,7 @@ class RoutePill extends StatelessWidget {
               Text(
                 route.name ?? '-',
                 style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                      color: Colors.white,
+                      color: selected ? Colors.white : route.color,
                       fontWeight: FontWeight.w700,
                     ),
               ),
