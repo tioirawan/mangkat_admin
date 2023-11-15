@@ -29,7 +29,7 @@ class LoadBalancerNotifier extends StateNotifier<Map<RouteModel, RouteDetail>> {
   final List<RouteModel> _routes;
   final Ref _ref;
 
-  bool get isOrchestrating => _ref.read(isLoadBalancerActiveProvider);
+  bool get isBalancing => _ref.read(isLoadBalancerActiveProvider);
 
   // calculate fleets candidates
   // candidates fleets are fleets that is currently in "switching-point", has 0 passengers, and has driver

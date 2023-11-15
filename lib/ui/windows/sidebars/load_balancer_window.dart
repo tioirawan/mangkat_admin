@@ -3,8 +3,10 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../providers/load_balancer/load_balancer_controller.dart';
+import '../../providers/switching_area/route_switching_areas_provider.dart';
 import '../../themes/app_theme.dart';
 import '../../widgets/route_pill.dart';
+import '../../widgets/switching_area_list_with_detail.dart';
 
 class LoadBalancerWindow extends ConsumerStatefulWidget {
   static const String name = 'window/load-balancer';
@@ -24,7 +26,7 @@ class _OrchestrationWindowState extends ConsumerState<LoadBalancerWindow> {
   @override
   Widget build(BuildContext context) {
     final isLoadBalancerActive = ref.watch(isLoadBalancerActiveProvider);
-    final orchestration = ref.watch(loadBalancerProvider);
+    final loadBalancer = ref.watch(loadBalancerProvider);
 
     return AnimatedSwitcher(
       duration: 200.milliseconds,
@@ -80,7 +82,7 @@ class _OrchestrationWindowState extends ConsumerState<LoadBalancerWindow> {
                                   ),
                                 ),
                                 Text(
-                                  'Otomatisasi penentuan trayek armada',
+                                  'Otomatisasi penentuan armada trayek',
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodySmall!
@@ -119,6 +121,21 @@ class _OrchestrationWindowState extends ConsumerState<LoadBalancerWindow> {
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
+                              'Armada Tersedia',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleSmall!
+                                  .copyWith(
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          const SwitchingAreaListWithDetail(),
+                          const SizedBox(height: 16),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
                               'Trayek',
                               style: Theme.of(context)
                                   .textTheme
@@ -129,7 +146,7 @@ class _OrchestrationWindowState extends ConsumerState<LoadBalancerWindow> {
                             ),
                           ),
                           const SizedBox(height: 8),
-                          for (final key in orchestration.keys)
+                          for (final key in loadBalancer.keys)
                             Column(
                               children: [
                                 Row(
@@ -144,12 +161,51 @@ class _OrchestrationWindowState extends ConsumerState<LoadBalancerWindow> {
                                     ),
                                     Expanded(
                                       child: _buildRouteOccupancy(
-                                        orchestration[key]!.totalCapacity,
-                                        orchestration[key]!.totalPassengers,
+                                        loadBalancer[key]!.totalCapacity,
+                                        loadBalancer[key]!.totalPassengers,
                                       ),
                                     ),
                                   ],
                                 ),
+                                const SizedBox(height: 16),
+                                Consumer(builder: (context, ref, _) {
+                                  final switchAreas = ref.watch(
+                                      routeSwitchingAreasProvider(key.id));
+
+                                  return Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'SA: ',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleSmall!
+                                            .copyWith(
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                      ),
+                                      Expanded(
+                                        child: Text(
+                                          switchAreas.isEmpty
+                                              ? '-'
+                                              : switchAreas
+                                                  .map((e) => e.name)
+                                                  .join(', '),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodySmall!
+                                              .copyWith(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .onBackground
+                                                    .withOpacity(0.5),
+                                              ),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                }),
                                 const SizedBox(height: 16),
                                 const Divider(
                                   height: 0,

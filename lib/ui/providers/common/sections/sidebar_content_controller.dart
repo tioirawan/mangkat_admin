@@ -14,6 +14,7 @@ import '../../../windows/sidebars/fleet_detail_window.dart';
 import '../../../windows/sidebars/load_balancer_window.dart';
 import '../../../windows/sidebars/route_detail_window.dart';
 import '../../../windows/sidebars/statistic_window.dart';
+import '../../../windows/sidebars/switching_area_detail_window.dart';
 import '../events/global_events.dart';
 import '../events/global_events_provider.dart';
 
@@ -80,9 +81,15 @@ final rightSidebarContentController =
       false,
     )
     ..register(
-      AddSwitchingAreaWindow.name,
-      (Object? arg) => AddSwitchingAreaWindow(
-        switchingArea: arg as SwitchingAreaModel?,
+        AddSwitchingAreaWindow.name,
+        (Object? arg) => AddSwitchingAreaWindow(
+              switchingArea: arg as SwitchingAreaModel?,
+            ),
+        false)
+    ..register(
+      SwitchingAreaDetailWindow.name,
+      (Object? arg) => SwitchingAreaDetailWindow(
+        switchingAreaId: arg as String?,
       ),
       false,
     ),

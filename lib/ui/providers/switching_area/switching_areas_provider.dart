@@ -5,5 +5,5 @@ import '../../../domain/repositories/switching_area_repository.dart';
 
 final switchingAreasProvider =
     StreamProvider.autoDispose<List<SwitchingAreaModel>>(
-  (ref) => ref.watch(switchingAreaRepositoryProvider).switchingAreasStream(),
+  (ref) => ref.watch(switchingAreaRepositoryProvider).streamSwitchingAreas(),
 );

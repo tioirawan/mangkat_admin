@@ -54,10 +54,17 @@ class SwitchingAreaRepositoryImpl implements SwitchingAreaRepository {
   }
 
   @override
-  Stream<List<SwitchingAreaModel>> switchingAreasStream() {
+  Stream<List<SwitchingAreaModel>> streamSwitchingAreas() {
     return _switchingAreas.snapshots().map(
           (snapshot) =>
               snapshot.docs.map(SwitchingAreaModel.fromSnapshot).toList(),
+        );
+  }
+
+  @override
+  Stream<SwitchingAreaModel> streamSwitchingArea(String id) {
+    return _switchingAreas.doc(id).snapshots().map(
+          (snapshot) => SwitchingAreaModel.fromSnapshot(snapshot),
         );
   }
 }

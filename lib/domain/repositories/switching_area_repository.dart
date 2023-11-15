@@ -5,7 +5,8 @@ import '../models/switching_area_model.dart';
 import '../services/firebase_service.dart';
 
 abstract class SwitchingAreaRepository {
-  Stream<List<SwitchingAreaModel>> switchingAreasStream();
+  Stream<List<SwitchingAreaModel>> streamSwitchingAreas();
+  Stream<SwitchingAreaModel> streamSwitchingArea(String id);
   Future<List<SwitchingAreaModel>> getSwitchingAreas();
   Future<SwitchingAreaModel> getSwitchingArea(String id);
   Future<SwitchingAreaModel> addSwitchingArea(SwitchingAreaModel switchingArea);
