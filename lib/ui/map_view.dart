@@ -151,10 +151,21 @@ class MapViewState extends ConsumerState<MapView>
                         : route.color!.withOpacity(0.25),
                     strokeWidth:
                         focusedRoute == null || focusedRoute.id == route.id
-                            ? 3
-                            : 1,
+                            ? 4
+                            : 2,
                     isDotted: route.type == RouteType.temporary,
                   ),
+              // draw again focused route
+              if (focusedRoute != null &&
+                  focusedRoute.routes != null &&
+                  focusedRoute.color != null)
+                TaggedPolyline(
+                  tag: focusedRoute.id,
+                  points: focusedRoute.routes ?? [],
+                  color: focusedRoute.color!,
+                  strokeWidth: 4,
+                  isDotted: focusedRoute.type == RouteType.temporary,
+                ),
             ],
             onTap: (polylines, _) {
               if (polylines.isEmpty) return;
