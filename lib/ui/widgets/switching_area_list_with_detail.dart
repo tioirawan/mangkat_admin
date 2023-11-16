@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../providers/common/sections/sidebar_content_controller.dart';
-import '../providers/switching_area/switching_area_available_fleets_provider.dart';
+import '../providers/load_balancer/load_balancer_service_provider.dart';
 import '../providers/switching_area/switching_areas_provider.dart';
 import '../windows/sidebars/switching_area_detail_window.dart';
 
@@ -30,20 +30,33 @@ class SwitchingAreaListWithDetail extends ConsumerWidget {
                 ),
                 const SizedBox(height: 8),
                 Consumer(builder: (context, ref, _) {
-                  final fleets = ref.watch(
-                    switchingAreaAvailableFleetsProvider(switchingArea.id),
+                  // final fleets = ref.watch(
+                  //   switchingAreaFreeFleetsProvider(switchingArea.id),
+                  // );
+                  final isLoadBalancerActive = ref.watch(
+                    isLoadBalancerActiveProvider(switchingArea.id),
                   );
 
-                  return Text(
-                    '${fleets.length} armada',
-                    style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onBackground
-                              .withOpacity(0.5),
-                        ),
+                  return Switch(
+                    value: isLoadBalancerActive,
+                    onChanged: (value) {
+                      ref
+                          .read(isLoadBalancerActiveProvider(switchingArea.id)
+                              .notifier)
+                          .state = value;
+
+                      final loadBalancer = ref
+                          .read(loadBalancerServiceProvider(switchingArea.id));
+
+                      if (value) {
+                        loadBalancer?.start();
+                      } else {
+                        loadBalancer?.stop();
+                      }
+                    },
                   );
                 }),
+                const SizedBox(height: 8),
                 IconButton(
                   onPressed: () => ref
                       .read(rightSidebarContentController.notifier)

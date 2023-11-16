@@ -1,7 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../domain/models/fleet_model.dart';
 import '../fleet/fleets_occupancies_provider.dart';
 import '../pick_requests/route_pick_requests_provide.dart';
+import '../switching_area/route_free_fleets_provider.dart';
 import 'route_fleets_provider.dart';
 import 'route_provider.dart';
 
@@ -12,6 +14,7 @@ class RouteDetail {
   final int totalDriver;
   final int totalCapacity;
   final int totalPickupRequests;
+  final Map<String, List<FleetModel>> freeFleets;
 
   RouteDetail({
     required this.routeId,
@@ -20,7 +23,16 @@ class RouteDetail {
     required this.totalPassengers,
     required this.totalCapacity,
     required this.totalPickupRequests,
+    required this.freeFleets,
   });
+
+  double get load {
+    if (totalCapacity == 0) {
+      return 0;
+    }
+
+    return totalPassengers / totalCapacity;
+  }
 }
 
 /// Return computed statistics of a route
@@ -57,6 +69,8 @@ final routeDetailProvider =
 
   int totalPickupRequests = pickRequests.value?.length ?? 0;
 
+  final freeFleets = ref.watch(routeFreeFleetsProvider(routeId));
+
   return RouteDetail(
     routeId: routeId,
     totalFleets: totalFleets,
@@ -64,5 +78,6 @@ final routeDetailProvider =
     totalPassengers: totalPassangers,
     totalCapacity: totalCapacity,
     totalPickupRequests: totalPickupRequests,
+    freeFleets: freeFleets,
   );
 });

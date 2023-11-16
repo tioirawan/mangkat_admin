@@ -9,7 +9,7 @@ import '../themes/app_theme.dart';
 import '../windows/driver_manager_window.dart';
 import '../windows/fleet_manager_window.dart';
 import '../windows/route_manager_window.dart';
-import '../windows/switching_area_manager_window copy.dart';
+import '../windows/switching_area_manager_window.dart';
 
 class Content extends ConsumerWidget {
   const Content({super.key});

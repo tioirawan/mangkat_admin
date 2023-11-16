@@ -119,7 +119,10 @@ class _SwitchingAreaManagerWindowState
                     )
                 ],
               ),
-              _buildActionButtons(context, switchingArea),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4.0),
+                child: _buildActionButtons(context, switchingArea),
+              ),
             ],
           ),
       ],

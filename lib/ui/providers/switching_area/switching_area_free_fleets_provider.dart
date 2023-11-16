@@ -8,7 +8,7 @@ import '../fleet/fleets_provider.dart';
 import 'switching_area_provider.dart';
 
 /// Provide fleets that are available to be switched to other route route
-final switchingAreaAvailableFleetsProvider = Provider.autoDispose
+final switchingAreaFreeFleetsProvider = Provider.autoDispose
     .family<List<FleetModel>, String?>((ref, switchingAreaId) {
   if (switchingAreaId == null) {
     return [];
@@ -25,7 +25,8 @@ final switchingAreaAvailableFleetsProvider = Provider.autoDispose
   final fleetsPassanger = ref.watch(fleetsOccupanciesProvider).value ?? {};
 
   final availableFleets = fleets.where((fleet) {
-    final isMatch = switchingArea.routes?.contains(fleet.routeId) == true &&
+    final isMatch = (fleet.routeId == null ||
+            switchingArea.routes?.contains(fleet.routeId) == true) &&
         fleet.driverId != null;
 
     if (!isMatch) return false;
