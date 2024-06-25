@@ -58,6 +58,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '956777547394',
     projectId: 'mangkat-mage',
     authDomain: 'mangkat-mage.firebaseapp.com',
+    databaseURL: 'https://mangkat-mage-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'mangkat-mage.appspot.com',
     measurementId: 'G-S4ZF0WW02M',
   );

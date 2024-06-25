@@ -18,8 +18,13 @@ class RouteRepositoryImpl implements RouteRepository {
   }
 
   @override
-  Future<void> addRoute(RouteModel route) async {
-    await _routes.add(route.toDocument());
+  Future<RouteModel> addRoute(RouteModel route) async {
+    final doc = await _routes.add(route.toDocument());
+
+    return route.copyWith(
+      id: doc.id,
+      reference: doc,
+    );
   }
 
   @override
@@ -40,7 +45,8 @@ class RouteRepositoryImpl implements RouteRepository {
   }
 
   @override
-  Future<void> updateRoute(RouteModel route) async {
+  Future<RouteModel> updateRoute(RouteModel route) async {
     await _routes.doc(route.id).update(route.toDocument());
+    return route;
   }
 }

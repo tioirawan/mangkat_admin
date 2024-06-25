@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../helpers/sizing_helper.dart';
 import '../providers/common/content_window_controller/content_window_controller.dart';
+import '../providers/common/sections/sidebar_content_controller.dart';
 import '../themes/app_theme.dart';
-import '../windows/driver_manager_window copy 2.dart';
+import '../windows/driver_manager_window.dart';
 import '../windows/fleet_manager_window.dart';
 import '../windows/route_manager_window.dart';
 
@@ -14,11 +17,16 @@ class Content extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final window = ref.watch(contentWindowProvider);
 
-    final content = window != null ? _buildContent(window) : const SizedBox();
+    final rightBar = ref.watch(rightSidebarContentController);
+    final rightBarHasOpenWindow = rightBar.values.any((e) => e.$1);
+
+    final content = window != null
+        ? _buildContent(context, window, rightBarHasOpenWindow)
+        : const SizedBox();
 
     return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 250),
-      reverseDuration: const Duration(milliseconds: 100),
+      duration: 250.milliseconds,
+      reverseDuration: 250.milliseconds,
       switchInCurve: Curves.easeOut,
       switchOutCurve: Curves.easeIn,
       transitionBuilder: (child, animation) => FadeTransition(
@@ -40,7 +48,13 @@ class Content extends ConsumerWidget {
     );
   }
 
-  Widget _buildContent(ContentWindowType window) {
+  Widget _buildContent(
+    BuildContext context,
+    ContentWindowType window,
+    bool rightBarHasOpenWindow,
+  ) {
+    final double sidebarWidth = SizingHelper.calculateSidebarWidth(context);
+
     Widget content = switch (window) {
       ContentWindowType.routeManager => const RouteManagerWindow(),
       ContentWindowType.fleetManager => const FleetManagerWindow(),
@@ -56,11 +70,14 @@ class Content extends ConsumerWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        // Container(
-        //   decoration: AppTheme.windowCardDecoration,
-        //   child: content,
-        // ),
-        content,
+        AnimatedPadding(
+          duration: 250.milliseconds,
+          curve: Curves.easeInOut,
+          padding: EdgeInsets.only(
+            right: rightBarHasOpenWindow ? sidebarWidth - 24 : 0,
+          ),
+          child: content,
+        ),
         // arrow pointing down using container
         Transform.translate(
           offset: Offset(xOffset, 0),

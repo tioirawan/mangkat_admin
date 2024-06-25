@@ -25,6 +25,7 @@ abstract class AppTheme {
           fontSize: 14,
           fontWeight: FontWeight.w700,
         ),
+        floatingLabelBehavior: FloatingLabelBehavior.always,
         enabledBorder: inputBorder,
         disabledBorder: inputBorder,
         border: inputBorder,

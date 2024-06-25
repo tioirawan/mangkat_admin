@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 
+import '../providers/common/map_controller/map_provider.dart';
 import '../providers/common/sections/sidebar_content_controller.dart';
 
 class LeftBar extends ConsumerWidget {
@@ -10,6 +11,9 @@ class LeftBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final contents = ref.watch(leftSidebarContentController);
+    final isFocused = ref.watch(
+      mapControllerProvider.select((value) => value.cleanMode),
+    );
 
     return ListView(
       padding: const EdgeInsets.all(28.0).copyWith(bottom: 0),
@@ -28,7 +32,7 @@ class LeftBar extends ConsumerWidget {
               child: child,
             ),
           ),
-          child: isVisible
+          child: !isFocused && isVisible
               ? Padding(
                   padding: const EdgeInsets.only(bottom: 16),
                   child: PointerInterceptor(child: window),

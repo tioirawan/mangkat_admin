@@ -17,6 +17,11 @@ class RightBar extends ConsumerWidget {
       children: contents.keys.map((key) {
         final (isVisible, window) = contents[key]!;
 
+        // TODO: fix jumps or blinking animation when an item is moved to the top of the list
+        // idea: create something like a "slot", every slot has an AnimatedSwitcher with a specific key
+        // when an item is moved to the top, the slot child is replaced with the new item, while the
+        // slot itself doesn't change, so the animation will be smooth
+
         return AnimatedSwitcher(
           duration: const Duration(milliseconds: 200),
           switchInCurve: Curves.easeIn,
